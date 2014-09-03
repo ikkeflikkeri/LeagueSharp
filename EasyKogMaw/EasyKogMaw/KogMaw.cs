@@ -1,4 +1,5 @@
-﻿using LeagueSharp.Common;
+﻿using LeagueSharp;
+using LeagueSharp.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +17,18 @@ namespace EasyKogMaw
 
         protected override void CreateSpells()
         {
-            
+            Spell Q = new Spell(SpellSlot.Q, 975);
+            Q.SetSkillshot(0.5f, 70f, 1200f, true, SkillshotType.SkillshotLine);
+
+            Spell E = new Spell(SpellSlot.E, 1200);
+            E.SetSkillshot(0.5f, 120f, 1200f, false, SkillshotType.SkillshotLine);
+
+            Spell R = new Spell(SpellSlot.R, 100000);
+            R.SetSkillshot(1.1f, 225f, float.MaxValue, false, SkillshotType.SkillshotCircle);
+
+            Spells.Add("Q", Q);
+            Spells.Add("E", E);
+            Spells.Add("R", R);
         }
 
         protected override void CreateMenu()
