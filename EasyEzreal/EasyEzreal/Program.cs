@@ -12,7 +12,7 @@ namespace EasyEzreal
 {
     class Program
     {
-        private static Ezreal Ezreal;
+        private static Champion Ezreal;
 
         static void Main(string[] args)
         {

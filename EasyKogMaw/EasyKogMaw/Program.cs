@@ -10,7 +10,7 @@ namespace EasyKogMaw
 {
     class Program
     {
-        private static KogMaw KogMaw;
+        private static Champion KogMaw;
         static void Main(string[] args)
         {
             CustomEvents.Game.OnGameLoad += Game_OnGameLoad;
