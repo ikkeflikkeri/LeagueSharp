@@ -18,20 +18,16 @@ namespace EasyEzreal
 
         protected override void CreateSpells()
         {
-            Spell Q = new Spell(SpellSlot.Q, 1150);
+            Spell Q = new Spell(SpellSlot.Q, 1150f);
             Q.SetSkillshot(0.25f, 60f, 2000f, true, SkillshotType.SkillshotLine);
 
-            Spell W = new Spell(SpellSlot.W, 1000);
-            W.SetSkillshot(0.25f, 80f, 2000f, false, SkillshotType.SkillshotLine);
+            Spell E = new Spell(SpellSlot.E, 1200f);
+            E.SetSkillshot(0.5f, 120f, 1200f, false, SkillshotType.SkillshotCircle);
 
-            Spell E = new Spell(SpellSlot.E, 475);
-            E.SetSkillshot(0.25f, 80f, 1600f, false, SkillshotType.SkillshotCircle);
-
-            Spell R = new Spell(SpellSlot.R, 100000);
-            R.SetSkillshot(1f, 160f, 2000f, false, SkillshotType.SkillshotLine);
+            Spell R = new Spell(SpellSlot.R, 1100f);
+            R.SetSkillshot(1.1f, 225f, float.MaxValue, false, SkillshotType.SkillshotCircle);
 
             Spells.Add("Q", Q);
-            Spells.Add("W", W);
             Spells.Add("E", E);
             Spells.Add("R", R);
         }
