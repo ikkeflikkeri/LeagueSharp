@@ -21,13 +21,16 @@ namespace EasyKogMaw
             Spell Q = new Spell(SpellSlot.Q, 950);
             Q.SetSkillshot(0.5f, 70f, 1200f, true, SkillshotType.SkillshotLine);
 
+            Spell W = new Spell(SpellSlot.W, 130);
+
             Spell E = new Spell(SpellSlot.E, 1200);
             E.SetSkillshot(0.5f, 120f, 1200f, false, SkillshotType.SkillshotLine);
 
             Spell R = new Spell(SpellSlot.R, 1100);
-            R.SetSkillshot(1.1f, 225f, float.MaxValue, false, SkillshotType.SkillshotCircle);
+            R.SetSkillshot(1.5f, 225f, float.MaxValue, false, SkillshotType.SkillshotCircle);
 
             Spells.Add("Q", Q);
+            Spells.Add("W", W);
             Spells.Add("E", E);
             Spells.Add("R", R);
         }
@@ -65,23 +68,43 @@ namespace EasyKogMaw
         protected override void Combo()
         {
             if (Menu.Item("Combo_q").GetValue<bool>()) CastQ();
+            if (Menu.Item("Combo_w").GetValue<bool>()) CastW();
             if (Menu.Item("Combo_e").GetValue<bool>()) CastE();
-            if (Menu.Item("Combo_r").GetValue<bool>()) CastR();
+            if (Menu.Item("Combo_r").GetValue<bool>())
+            {
+                if (GetRStacks() < Menu.Item("Combo_maxrstacks").GetValue<Slider>().Value)
+                    CastR();
+            }
         }
         protected override void Harass()
         {
             if (Menu.Item("Harass_q").GetValue<bool>()) CastQ();
+            if (Menu.Item("Harass_w").GetValue<bool>()) CastW();
             if (Menu.Item("Harass_e").GetValue<bool>()) CastE();
-            if (Menu.Item("Harass_r").GetValue<bool>()) CastR();
+            if (Menu.Item("Harass_r").GetValue<bool>())
+            {
+                if (GetRStacks() < Menu.Item("Harass_maxrstacks").GetValue<Slider>().Value)
+                    CastR();
+            }
         }
         protected override void Auto()
         {
             if (Menu.Item("Auto_q").GetValue<bool>()) CastQ();
+            if (Menu.Item("Auto_w").GetValue<bool>()) CastW();
             if (Menu.Item("Auto_e").GetValue<bool>()) CastE();
-            if (Menu.Item("Auto_r").GetValue<bool>()) CastR();
+            if (Menu.Item("Auto_r").GetValue<bool>())
+            {
+                if(GetRStacks() < Menu.Item("Auto_maxrstacks").GetValue<Slider>().Value)
+                    CastR();
+            }
         }
         public override void Drawing()
         {
+            if (Spells["W"].Level > 1)
+                Spells["W"].Range = 110 + Spells["W"].Level * 20;
+            if (Spells["R"].Level > 1)
+                Spells["R"].Range = 900 + Spells["R"].Level * 300;
+
             Circle qCircle = Menu.Item("Drawing_q").GetValue<Circle>();
             Circle eCircle = Menu.Item("Drawing_e").GetValue<Circle>();
             Circle rCircle = Menu.Item("Drawing_r").GetValue<Circle>();
@@ -106,7 +129,12 @@ namespace EasyKogMaw
         }
         private void CastW()
         {
+            if (!Spells["W"].IsReady()) return;
 
+            Obj_AI_Hero target = SimpleTs.GetTarget(Spells["W"].Range + Player.AttackRange, SimpleTs.DamageType.Magical);
+            if (target == null) return;
+
+            Spells["W"].Cast();
         }
         private void CastE()
         {
@@ -127,6 +155,22 @@ namespace EasyKogMaw
 
             if (target.IsValidTarget(Spells["R"].Range) && Spells["R"].GetPrediction(target).Hitchance >= HitChance.High)
                 Spells["R"].Cast(target, true);
+        }
+
+        private int GetRStacks()
+        {
+            BuffInstance stacks = null;
+
+            foreach (var buff in Player.Buffs)
+            {
+                if (buff.DisplayName == "KogMawLivingArtillery")
+                    stacks = buff;
+            }
+
+            if (stacks == null)
+                return 0;
+            else
+                return stacks.Count;
         }
     }
 }
