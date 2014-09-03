@@ -22,6 +22,7 @@ namespace EasyEzreal
         static void Game_OnGameLoad(EventArgs args)
         {
             Ezreal = new Ezreal();
+            if (!Ezreal.isLoaded) return;
 
             Game.OnGameUpdate += Game_OnGameUpdate;
             Drawing.OnDraw += Drawing_OnDraw;

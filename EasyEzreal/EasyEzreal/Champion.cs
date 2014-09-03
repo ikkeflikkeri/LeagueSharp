@@ -14,6 +14,7 @@ namespace EasyEzreal
         public Menu Menu;
         public Orbwalking.Orbwalker Orbwalker;
         public Dictionary<string, Spell> Spells = new Dictionary<string, Spell>();
+        public bool isLoaded = false;
 
         private string ChampionName;
 
@@ -21,6 +22,10 @@ namespace EasyEzreal
         {
             ChampionName = name;
             Player = ObjectManager.Player;
+
+            if (ChampionName != Player.ChampionName)
+                return;
+            isLoaded = true;
 
             CreateSpells();
 
