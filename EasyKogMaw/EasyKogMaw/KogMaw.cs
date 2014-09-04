@@ -161,10 +161,13 @@ namespace EasyKogMaw
         {
             BuffInstance stacks = null;
 
-            foreach (var buff in Player.Buffs)
+            if (Player.HasBuff("KogMawLivingArtillery"))
             {
-                if (buff.DisplayName == "KogMawLivingArtillery")
-                    stacks = buff;
+                foreach (var buff in Player.Buffs)
+                {
+                    if (buff.DisplayName == "KogMawLivingArtillery")
+                        stacks = buff;
+                }
             }
 
             if (stacks == null)
