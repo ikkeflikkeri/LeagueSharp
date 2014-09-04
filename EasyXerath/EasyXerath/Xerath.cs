@@ -63,14 +63,20 @@ namespace EasyXerath
         protected override void Combo()
         {
             if (Menu.Item("Combo_q").GetValue<bool>()) CastQ();
+            if (Menu.Item("Combo_w").GetValue<bool>()) CastQ();
+            if (Menu.Item("Combo_e").GetValue<bool>()) CastQ();
         }
         protected override void Harass()
         {
             if (Menu.Item("Harass_q").GetValue<bool>()) CastQ();
+            if (Menu.Item("Harass_w").GetValue<bool>()) CastQ();
+            if (Menu.Item("Harass_e").GetValue<bool>()) CastQ();
         }
         protected override void Auto()
         {
             if (Menu.Item("Auto_q").GetValue<bool>()) CastQ();
+            if (Menu.Item("Auto_w").GetValue<bool>()) CastQ();
+            if (Menu.Item("Auto_e").GetValue<bool>()) CastQ();
         }
         public override void Drawing()
         {
@@ -93,6 +99,26 @@ namespace EasyXerath
             {
                 Spells["Q"].StartCharging();
             }
+        }
+
+        private void CastW()
+        {
+            if (!Spells["W"].IsReady()) return;
+
+            Obj_AI_Hero target = SimpleTs.GetTarget(Spells["W"].ChargedMaxRange, SimpleTs.DamageType.Magical);
+            if (target == null) return;
+
+            Spells["W"].Cast(target, true, true);
+        }
+
+        private void CastE()
+        {
+            if (!Spells["E"].IsReady()) return;
+
+            Obj_AI_Hero target = SimpleTs.GetTarget(Spells["E"].ChargedMaxRange, SimpleTs.DamageType.Magical);
+            if (target == null) return;
+
+            Spells["E"].Cast(target, true);
         }
     }
 }
