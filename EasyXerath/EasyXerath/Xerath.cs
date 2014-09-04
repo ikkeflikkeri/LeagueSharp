@@ -12,7 +12,7 @@ namespace EasyXerath
     {
         public Xerath() : base("Xerath")
         {
-            Game.PrintChat("EasyXerath is still Work in Progress, Please don't use it!")
+            Game.PrintChat("EasyXerath is still Work in Progress, Please don't use it!");
         }
 
         protected override void CreateSpells()
