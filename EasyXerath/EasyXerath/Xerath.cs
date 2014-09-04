@@ -12,15 +12,23 @@ namespace EasyXerath
     {
         public Xerath() : base("Xerath")
         {
-            
+            Game.PrintChat("EasyXerath is still Work in Progress, Please don't use it!")
         }
 
         protected override void CreateSpells()
         {
             Spell Q = new Spell(SpellSlot.Q);
+            Q.SetSkillshot(0.6f, 100f, float.MaxValue, false, SkillshotType.SkillshotLine);
+            Q.SetCharged("XerathArcanopulseChargeUp", "XerathArcanopulseChargeUp", 750, 1550, 1.5f);
+
             Spell W = new Spell(SpellSlot.W);
+            W.SetSkillshot(0.7f, 125f, float.MaxValue, false, SkillshotType.SkillshotCircle);
+
             Spell E = new Spell(SpellSlot.E);
+            E.SetSkillshot(0.25f, 60f, 1400f, true, SkillshotType.SkillshotLine);
+
             Spell R = new Spell(SpellSlot.R);
+            R.SetSkillshot(0.7f, 120f, float.MaxValue, false, SkillshotType.SkillshotCircle);
 
             Spells.Add("Q", Q);
             Spells.Add("W", W);
@@ -54,15 +62,15 @@ namespace EasyXerath
 
         protected override void Combo()
         {
-            
+            if (Menu.Item("Combo_q").GetValue<bool>()) CastQ();
         }
         protected override void Harass()
         {
-            
+            if (Menu.Item("Harass_q").GetValue<bool>()) CastQ();
         }
         protected override void Auto()
         {
-            
+            if (Menu.Item("Auto_q").GetValue<bool>()) CastQ();
         }
         public override void Drawing()
         {
@@ -71,7 +79,20 @@ namespace EasyXerath
 
         private void CastQ()
         {
+            if (!Spells["Q"].IsReady()) return;
 
+            Obj_AI_Hero target = SimpleTs.GetTarget(Spells["Q"].ChargedMaxRange, SimpleTs.DamageType.Magical);
+            if (target == null) return;
+
+
+            if (Spells["Q"].IsCharging && Spells["Q"].GetPrediction(target).Hitchance >= HitChance.High)
+            {
+                Spells["Q"].Cast(target, true);
+            }
+            else
+            {
+                Spells["Q"].StartCharging();
+            }
         }
     }
 }
