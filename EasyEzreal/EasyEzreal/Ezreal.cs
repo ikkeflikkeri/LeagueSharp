@@ -13,7 +13,7 @@ namespace EasyEzreal
     {
         public Ezreal() : base("Ezreal")
         {
-            
+
         }
 
         protected override void CreateSpells()
@@ -75,7 +75,7 @@ namespace EasyEzreal
             if (Menu.Item("Auto_w").GetValue<bool>()) CastW();
             if (Menu.Item("Auto_r").GetValue<bool>()) CastR();
         }
-        public override void Drawing()
+        protected override void Drawing()
         {
             Circle qCircle = Menu.Item("Drawing_q").GetValue<Circle>();
             Circle wCircle = Menu.Item("Drawing_w").GetValue<Circle>();

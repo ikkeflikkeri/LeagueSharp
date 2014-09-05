@@ -16,26 +16,7 @@ namespace EasyEzreal
 
         static void Main(string[] args)
         {
-            CustomEvents.Game.OnGameLoad += Game_OnGameLoad;
-        }
-
-        static void Game_OnGameLoad(EventArgs args)
-        {
             Ezreal = new Ezreal();
-            if (!Ezreal.isLoaded) return;
-
-            Game.OnGameUpdate += Game_OnGameUpdate;
-            Drawing.OnDraw += Drawing_OnDraw;
-        }
-
-        static void Drawing_OnDraw(EventArgs args)
-        {
-            Ezreal.Drawing();
-        }
-
-        static void Game_OnGameUpdate(EventArgs args)
-        {
-            Ezreal.Update();
         }
     }
 }

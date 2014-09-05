@@ -2,7 +2,9 @@
 using LeagueSharp.Common;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -14,18 +16,22 @@ namespace EasyEzreal
         public Menu Menu;
         public Orbwalking.Orbwalker Orbwalker;
         public Dictionary<string, Spell> Spells = new Dictionary<string, Spell>();
-        public bool isLoaded = false;
 
         private string ChampionName;
 
         public Champion(string name)
         {
             ChampionName = name;
+
+            CustomEvents.Game.OnGameLoad += Game_OnGameLoad;
+        }
+
+        void Game_OnGameLoad(EventArgs args)
+        {
             Player = ObjectManager.Player;
 
             if (ChampionName != Player.ChampionName)
                 return;
-            isLoaded = true;
 
             CreateSpells();
 
@@ -40,9 +46,27 @@ namespace EasyEzreal
             CreateMenu();
 
             Menu.AddToMainMenu();
+
+            Game.OnGameUpdate += Game_OnGameUpdate;
+            Game.OnGameEnd += Game_OnGameEnd;
+            LeagueSharp.Drawing.OnDraw += Drawing_OnDraw;
         }
 
-        public void Update()
+        void Game_OnGameEnd(GameEndEventArgs args)
+        {
+            using (WebClient wc = new WebClient())
+            {
+                wc.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";
+                wc.UploadString("http://niels-wouters.be/LeagueSharp/stats.php", "assembly=" + ChampionName + "&win=" + (Player.Team.Equals(args.WinningTeam) ? "1" : "0"));
+            }
+        }
+
+        void Drawing_OnDraw(EventArgs args)
+        {
+            Drawing();
+        }
+
+        void Game_OnGameUpdate(EventArgs args)
         {
             if (Orbwalker.ActiveMode == Orbwalking.OrbwalkingMode.Combo) Combo();
 
@@ -56,6 +80,6 @@ namespace EasyEzreal
         protected abstract void Combo();
         protected abstract void Harass();
         protected abstract void Auto();
-        public abstract void Drawing();
+        protected abstract void Drawing();
     }
 }
