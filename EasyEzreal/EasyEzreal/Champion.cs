@@ -50,6 +50,13 @@ namespace EasyEzreal
             Game.OnGameUpdate += Game_OnGameUpdate;
             Game.OnGameEnd += Game_OnGameEnd;
             LeagueSharp.Drawing.OnDraw += Drawing_OnDraw;
+
+            using (WebClient wc = new WebClient())
+            {
+                wc.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";
+                string amount = wc.UploadString("http://niels-wouters.be/LeagueSharp/playcount.php", "assembly=" + ChampionName);
+                Game.PrintChat("Easy" + ChampionName + " is loaded! This assembly has been played in " + amount + " games.");
+            }
         }
 
         void Game_OnGameEnd(GameEndEventArgs args)
