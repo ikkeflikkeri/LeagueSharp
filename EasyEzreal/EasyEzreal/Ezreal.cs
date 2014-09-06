@@ -103,7 +103,7 @@ namespace EasyEzreal
             Obj_AI_Hero target = SimpleTs.GetTarget(Spells["Q"].Range, SimpleTs.DamageType.Physical);
             if (target == null) return;
 
-            if (target.IsValidTarget(Spells["Q"].Range) && Spells["Q"].GetPrediction(target).Hitchance >= HitChance.High)
+            if (Spells["Q"].GetPrediction(target).Hitchance >= HitChance.High)
                 Spells["Q"].Cast(target, true);
         }
         void CastW()
@@ -113,7 +113,7 @@ namespace EasyEzreal
             Obj_AI_Hero target = SimpleTs.GetTarget(Spells["W"].Range, SimpleTs.DamageType.Physical);
             if (target == null) return;
 
-            if (target.IsValidTarget(Spells["W"].Range) && Spells["W"].GetPrediction(target).Hitchance >= HitChance.High)
+            if (Spells["W"].GetPrediction(target).Hitchance >= HitChance.High)
                 Spells["W"].Cast(target, true);
         }
         void CastR()
@@ -123,7 +123,7 @@ namespace EasyEzreal
             Obj_AI_Hero target = SimpleTs.GetTarget(Menu.Item("Auto_maxrange").GetValue<Slider>().Value, SimpleTs.DamageType.Magical);
             if (target == null || UltimateDamage(target) < target.Health) return;
 
-            if (target.IsValidTarget(Menu.Item("Auto_maxrange").GetValue<Slider>().Value) && target.Distance(Player) > Menu.Item("Auto_minrange").GetValue<Slider>().Value && Spells["R"].GetPrediction(target).Hitchance >= HitChance.High)
+            if (target.Distance(Player) > Menu.Item("Auto_minrange").GetValue<Slider>().Value && Spells["R"].GetPrediction(target).Hitchance >= HitChance.High)
                 Spells["R"].Cast(target, true);
         }
     }
