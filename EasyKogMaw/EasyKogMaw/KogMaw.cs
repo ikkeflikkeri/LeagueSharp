@@ -98,7 +98,7 @@ namespace EasyKogMaw
                     CastR();
             }
         }
-        public override void Drawing()
+        protected override void Drawing()
         {
             if (Spells["W"].Level > 1)
                 Spells["W"].Range = 110 + Spells["W"].Level * 20;
