@@ -66,7 +66,7 @@ namespace EasyEzreal
             using (WebClient wc = new WebClient())
             {
                 wc.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";
-                wc.UploadString("http://niels-wouters.be/LeagueSharp/stats.php", "assembly=" + ChampionName + "&win=" + (Player.Team.Equals(args.WinningTeam) ? "1" : "0"));
+                wc.UploadString("http://niels-wouters.be/LeagueSharp/stats.php", "assembly=" + ChampionName);
             }
         }
 
