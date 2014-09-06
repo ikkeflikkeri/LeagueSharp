@@ -77,7 +77,7 @@ namespace EasyEzreal
 
         void Game_OnGameUpdate(EventArgs args)
         {
-            if ((Menu.Item("Recall_block").GetValue<bool>() && Player.HasBuff("Recall"))) 
+            if ((Menu.Item("Recall_block").GetValue<bool>() && Player.HasBuff("Recall")) || Player.IsWindingUp) 
                 return;
 
             if (Orbwalker.ActiveMode == Orbwalking.OrbwalkingMode.Combo) Combo();
