@@ -52,6 +52,11 @@ namespace EasyKogMaw
             Game.OnGameEnd += Game_OnGameEnd;
             LeagueSharp.Drawing.OnDraw += Drawing_OnDraw;
 
+            Utility.DelayAction.Add(3000, PrintOnlineStats);
+        }
+
+        void PrintOnlineStats()
+        {
             using (WebClient wc = new WebClient())
             {
                 wc.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";
