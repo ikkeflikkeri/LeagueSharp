@@ -45,6 +45,8 @@ namespace EasyEzreal
 
             CreateMenu();
 
+            Menu.AddItem(new MenuItem("Recall_block", "Block skills while recalling").SetValue(true));
+
             Menu.AddToMainMenu();
 
             Game.OnGameUpdate += Game_OnGameUpdate;
@@ -75,6 +77,9 @@ namespace EasyEzreal
 
         void Game_OnGameUpdate(EventArgs args)
         {
+            if ((Menu.Item("Recall_block").GetValue<bool>() && Player.HasBuff("Recall"))) 
+                return;
+
             if (Orbwalker.ActiveMode == Orbwalking.OrbwalkingMode.Combo) Combo();
 
             if (Orbwalker.ActiveMode == Orbwalking.OrbwalkingMode.Mixed) Harass();

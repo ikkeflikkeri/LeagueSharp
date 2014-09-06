@@ -77,8 +77,18 @@ namespace EasyXerath
             if (Menu.Item("Auto_q").GetValue<bool>()) CastQ();
             if (Menu.Item("Auto_w").GetValue<bool>()) CastQ();
             if (Menu.Item("Auto_e").GetValue<bool>()) CastQ();
+
+            foreach (var buff in Player.Buffs)
+            {
+                if(buff.DisplayName != "XerathAscended2" && buff.DisplayName != "XerathAscended2OnHit" && buff.DisplayName != "OdinPlayerBuff")
+                Game.PrintChat(buff.Name + " - " + buff.DisplayName);
+            }
         }
-        public override void Drawing()
+        protected override void Update()
+        {
+
+        }
+        protected override void Drawing()
         {
             
         }

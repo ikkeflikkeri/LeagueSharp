@@ -13,18 +13,21 @@ namespace EasyXerath
         public Menu Menu;
         public Orbwalking.Orbwalker Orbwalker;
         public Dictionary<string, Spell> Spells = new Dictionary<string, Spell>();
-        public bool isLoaded = false;
 
         private string ChampionName;
 
         public Champion(string name)
         {
             ChampionName = name;
+            CustomEvents.Game.OnGameLoad += Game_OnGameLoad;
+        }
+
+        private void Game_OnGameLoad(EventArgs args)
+        {
             Player = ObjectManager.Player;
 
             if (ChampionName != Player.ChampionName)
                 return;
-            isLoaded = true;
 
             CreateSpells();
 
@@ -39,15 +42,31 @@ namespace EasyXerath
             CreateMenu();
 
             Menu.AddToMainMenu();
+
+            Game.OnGameUpdate += Game_OnGameUpdate;
+            Obj_AI_Hero.OnProcessSpellCast += Obj_AI_Hero_OnProcessSpellCast;
+            LeagueSharp.Drawing.OnDraw += Drawing_OnDraw;
         }
 
-        public void Update()
+        void Obj_AI_Hero_OnProcessSpellCast(Obj_AI_Base sender, GameObjectProcessSpellCastEventArgs args)
+        {
+
+        }
+
+        private void Drawing_OnDraw(EventArgs args)
+        {
+            Drawing();
+        }
+
+        private void Game_OnGameUpdate(EventArgs args)
         {
             if (Orbwalker.ActiveMode == Orbwalking.OrbwalkingMode.Combo) Combo();
 
             if (Orbwalker.ActiveMode == Orbwalking.OrbwalkingMode.Mixed) Harass();
 
             Auto();
+
+            Update();
         }
 
         protected abstract void CreateSpells();
@@ -55,6 +74,7 @@ namespace EasyXerath
         protected abstract void Combo();
         protected abstract void Harass();
         protected abstract void Auto();
-        public abstract void Drawing();
+        protected abstract void Update();
+        protected abstract void Drawing();
     }
 }
