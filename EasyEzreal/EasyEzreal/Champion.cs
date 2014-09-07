@@ -53,11 +53,6 @@ namespace EasyEzreal
             Game.OnGameEnd += Game_OnGameEnd;
             LeagueSharp.Drawing.OnDraw += Drawing_OnDraw;
 
-            Utility.DelayAction.Add(3000, PrintOnlineStats);
-        }
-
-        void PrintOnlineStats()
-        {
             using (WebClient wc = new WebClient())
             {
                 wc.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";
@@ -82,6 +77,8 @@ namespace EasyEzreal
 
         void Game_OnGameUpdate(EventArgs args)
         {
+            Update();
+
             if ((Menu.Item("Recall_block").GetValue<bool>() && Player.HasBuff("Recall")) || Player.IsWindingUp)
                 return;
 
@@ -92,11 +89,33 @@ namespace EasyEzreal
             Auto();
         }
 
-        protected abstract void CreateSpells();
-        protected abstract void CreateMenu();
-        protected abstract void Combo();
-        protected abstract void Harass();
-        protected abstract void Auto();
-        protected abstract void Drawing();
+        protected virtual void CreateSpells()
+        {
+
+        }
+        protected virtual void CreateMenu()
+        {
+
+        }
+        protected virtual void Combo()
+        {
+
+        }
+        protected virtual void Harass()
+        {
+
+        }
+        protected virtual void Auto()
+        {
+
+        }
+        protected virtual void Drawing()
+        {
+
+        }
+        protected virtual void Update()
+        {
+
+        }
     }
 }
