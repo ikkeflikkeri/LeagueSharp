@@ -121,10 +121,21 @@ namespace EasyEzreal
             if (!Spells["R"].IsReady()) return;
 
             Obj_AI_Hero target = SimpleTs.GetTarget(Menu.Item("Auto_maxrange").GetValue<Slider>().Value, SimpleTs.DamageType.Magical);
-            if (target == null || UltimateDamage(target) < target.Health) return;
+            if (target == null) return;
+            if (UltimateDamage(target) < target.Health) return;
 
-            if (target.Distance(Player) > Menu.Item("Auto_minrange").GetValue<Slider>().Value && Spells["R"].GetPrediction(target).Hitchance >= HitChance.High)
+            if (distance(target, Player) > Menu.Item("Auto_minrange").GetValue<Slider>().Value && Spells["R"].GetPrediction(target).Hitchance >= HitChance.High)
                 Spells["R"].Cast(target, true);
+        }
+
+        float distance(Obj_AI_Hero player, Obj_AI_Hero enemy)
+        {
+            SharpDX.Vector3 vec = new SharpDX.Vector3();
+            vec.X = player.Position.X - enemy.Position.X;
+            vec.Y = player.Position.Y - enemy.Position.Y;
+            vec.Z = player.Position.Z - enemy.Position.Z;
+
+            return (float)Math.Sqrt(vec.X * vec.X + vec.Y * vec.Y + vec.Z * vec.Z);
         }
     }
 }
