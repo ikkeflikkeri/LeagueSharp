@@ -17,6 +17,8 @@ namespace EasyEzreal
         public Orbwalking.Orbwalker Orbwalker;
         public Dictionary<string, Spell> Spells = new Dictionary<string, Spell>();
 
+        private int tick = 1000 / 20;
+        private int lastTick = Environment.TickCount;
         private string ChampionName;
 
         public Champion(string name)
@@ -77,6 +79,9 @@ namespace EasyEzreal
 
         void Game_OnGameUpdate(EventArgs args)
         {
+            if (Environment.TickCount < lastTick + tick) return;
+            lastTick = Environment.TickCount;
+
             Update();
 
             if ((Menu.Item("Recall_block").GetValue<bool>() && Player.HasBuff("Recall")) || Player.IsWindingUp)
@@ -87,6 +92,7 @@ namespace EasyEzreal
             if (Orbwalker.ActiveMode == Orbwalking.OrbwalkingMode.Mixed) Harass();
 
             Auto();
+
         }
 
         protected virtual void CreateSpells()
