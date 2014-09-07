@@ -19,12 +19,12 @@ namespace EasyKogMaw
         protected override void CreateSpells()
         {
             Spell Q = new Spell(SpellSlot.Q, 950);
-            Q.SetSkillshot(0.5f, 70f, 1200f, true, SkillshotType.SkillshotLine);
+            Q.SetSkillshot(0.25f, 70f, 1650f, true, SkillshotType.SkillshotLine);
 
             Spell W = new Spell(SpellSlot.W, 130);
 
             Spell E = new Spell(SpellSlot.E, 1200);
-            E.SetSkillshot(0.5f, 120f, 1200f, false, SkillshotType.SkillshotLine);
+            E.SetSkillshot(0.25f, 120f, 1400f, false, SkillshotType.SkillshotLine);
 
             Spell R = new Spell(SpellSlot.R, 1100);
             R.SetSkillshot(1.5f, 225f, float.MaxValue, false, SkillshotType.SkillshotCircle);
