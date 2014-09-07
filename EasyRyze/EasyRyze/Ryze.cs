@@ -74,7 +74,7 @@ namespace EasyRyze
             if (Menu.Item("Auto_w").GetValue<bool>()) CastW();
             if (Menu.Item("Auto_q").GetValue<bool>()) CastQ();
             if (Menu.Item("Auto_e").GetValue<bool>()) CastE();
-            if (Menu.Item("Auto_r").GetValue<Slider>().Value >= EnemiesAroundPlayer(Player, Spells["R"].Range))
+            if (Menu.Item("Auto_r").GetValue<Slider>().Value <= EnemiesAroundPlayer(Player, Spells["R"].Range))
                 Spells["R"].Cast();
         }
         protected override void Drawing()
