@@ -174,8 +174,6 @@ namespace EasyRyze
                     enemies++;
             }
 
-            Console.WriteLine(enemies.ToString());
-
             return enemies;
         }
 
