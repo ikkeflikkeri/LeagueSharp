@@ -100,11 +100,6 @@ namespace EasyKogMaw
         }
         protected override void Drawing()
         {
-            if (Spells["W"].Level > 1)
-                Spells["W"].Range = 110 + Spells["W"].Level * 20;
-            if (Spells["R"].Level > 1)
-                Spells["R"].Range = 900 + Spells["R"].Level * 300;
-
             Circle qCircle = Menu.Item("Drawing_q").GetValue<Circle>();
             Circle eCircle = Menu.Item("Drawing_e").GetValue<Circle>();
             Circle rCircle = Menu.Item("Drawing_r").GetValue<Circle>();
@@ -115,6 +110,13 @@ namespace EasyKogMaw
                 Utility.DrawCircle(Player.Position, Spells["E"].Range, eCircle.Color);
             if (rCircle.Active)
                 Utility.DrawCircle(Player.Position, Spells["R"].Range, rCircle.Color);
+        }
+        protected override void Update()
+        {
+            if (Spells["W"].Level > 1)
+                Spells["W"].Range = 110 + Spells["W"].Level * 20;
+            if (Spells["R"].Level > 1)
+                Spells["R"].Range = 900 + Spells["R"].Level * 300;
         }
 
         private void CastQ()
