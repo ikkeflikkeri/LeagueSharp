@@ -27,7 +27,7 @@ namespace EasyEzreal
             Spell E = new Spell(SpellSlot.E, 475);
             E.SetSkillshot(0.25f, 80f, 1600f, false, SkillshotType.SkillshotCircle);
 
-            Spell R = new Spell(SpellSlot.R, 100000);
+            Spell R = new Spell(SpellSlot.R, float.MaxValue);
             R.SetSkillshot(1f, 160f, 2000f, false, SkillshotType.SkillshotLine);
 
             Spells.Add("Q", Q);
