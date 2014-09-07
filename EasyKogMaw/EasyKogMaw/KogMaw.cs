@@ -58,11 +58,15 @@ namespace EasyKogMaw
             Menu.SubMenu("Auto").AddItem(new MenuItem("Auto_r", "Use R").SetValue(false));
             Menu.SubMenu("Auto").AddItem(new MenuItem("Auto_maxrstacks", "Max R stacks").SetValue(new Slider(1, 0, 10)));
 
+            Menu.AddSubMenu(new Menu("Killsteal", "Killsteal"));
+            Menu.SubMenu("Killsteal").AddItem(new MenuItem("Ks_r", "Use R").SetValue(true));
+
             Menu.AddSubMenu(new Menu("Drawing", "Drawing"));
             Menu.SubMenu("Drawing").AddItem(new MenuItem("Drawing_q", "Use Q").SetValue(new Circle(true, Color.FromArgb(100, 0, 255, 0))));
             Menu.SubMenu("Drawing").AddItem(new MenuItem("Drawing_w", "Use W").SetValue(new Circle(true, Color.FromArgb(100, 0, 255, 0))));
             Menu.SubMenu("Drawing").AddItem(new MenuItem("Drawing_e", "Use E").SetValue(new Circle(true, Color.FromArgb(100, 0, 255, 0))));
             Menu.SubMenu("Drawing").AddItem(new MenuItem("Drawing_r", "Use R").SetValue(new Circle(true, Color.FromArgb(100, 0, 255, 0))));
+            Menu.SubMenu("Drawing").AddItem(new MenuItem("Drawing_rdamage", "R Damage Indicator").SetValue(true));
         }
 
         protected override void Combo()
@@ -110,6 +114,9 @@ namespace EasyKogMaw
                 Utility.DrawCircle(Player.Position, Spells["E"].Range, eCircle.Color);
             if (rCircle.Active)
                 Utility.DrawCircle(Player.Position, Spells["R"].Range, rCircle.Color);
+
+            Utility.HpBarDamageIndicator.DamageToUnit = UltimateDamage;
+            Utility.HpBarDamageIndicator.Enabled = Menu.Item("Drawing_rdamage").GetValue<bool>();
         }
         protected override void Update()
         {
@@ -117,6 +124,15 @@ namespace EasyKogMaw
                 Spells["W"].Range = 110 + Spells["W"].Level * 20;
             if (Spells["R"].Level > 1)
                 Spells["R"].Range = 900 + Spells["R"].Level * 300;
+
+            if (Menu.Item("Ks_r").GetValue<bool>())
+            {
+                foreach (var enemy in ObjectManager.Get<Obj_AI_Hero>())
+                {
+                    if (enemy.IsEnemy && enemy.IsValid && enemy.Distance(Player) < Spells["R"].Range && HealthPrediction.GetHealthPrediction(enemy, (int)Spells["R"].Delay * 1000) < DamageLib.getDmg(enemy, DamageLib.SpellType.R) && enemy.IsValidTarget(Spells["R"].Range) && Spells["R"].GetPrediction(enemy).Hitchance >= HitChance.High)
+                        Spells["R"].Cast(enemy, true);
+                }
+            }
         }
 
         private void CastQ()
@@ -176,6 +192,11 @@ namespace EasyKogMaw
                 return 0;
             else
                 return stacks.Count;
+        }
+
+        float UltimateDamage(Obj_AI_Hero hero)
+        {
+            return (float)DamageLib.getDmg(hero, DamageLib.SpellType.R);
         }
     }
 }
