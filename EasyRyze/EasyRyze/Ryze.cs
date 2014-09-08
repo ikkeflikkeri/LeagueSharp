@@ -16,6 +16,15 @@ namespace EasyRyze
             AntiGapcloser.OnEnemyGapcloser += AntiGapcloser_OnEnemyGapcloser;
         }
 
+        protected override void CreateSkins()
+        {
+            Skins.Add("Ryze");
+            Skins.Add("Human Ryze");
+            Skins.Add("Uncle Ryze");
+            Skins.Add("Tribal Ryze");
+            Skins.Add("Triumphant Ryze");
+            Skins.Add("Pirate Ryze");
+        }
         protected override void CreateSpells()
         {
             Spell Q = new Spell(SpellSlot.Q, 625);

@@ -16,6 +16,17 @@ namespace EasyKogMaw
             
         }
 
+        protected override void CreateSkins()
+        {
+            Skins.Add("Kog'Maw");
+            Skins.Add("Caterpillar Kog'Maw");
+            Skins.Add("Sonoran Kog'Maw");
+            Skins.Add("Monarch Kog'Maw");
+            Skins.Add("Reindeer Kog'Maw");
+            Skins.Add("Lion Dance Kog'Maw");
+            Skins.Add("Deep Sea Kog'Maw");
+            Skins.Add("Jurassic Kog'Maw");
+        }
         protected override void CreateSpells()
         {
             Spell Q = new Spell(SpellSlot.Q, 950);

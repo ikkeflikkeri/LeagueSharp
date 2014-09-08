@@ -15,7 +15,17 @@ namespace EasyEzreal
         {
 
         }
-
+        protected override void CreateSkins()
+        {
+            Skins.Add("Ezreal");
+            Skins.Add("Nottingham Ezreal");
+            Skins.Add("Striker Ezreal");
+            Skins.Add("Frosted Ezreal");
+            Skins.Add("Explorer Ezreal");
+            Skins.Add("Pulsefire Ezreal");
+            Skins.Add("TPA Ezreal");
+            Skins.Add("Debonair Ezreal");
+        }
         protected override void CreateSpells()
         {
             Spell Q = new Spell(SpellSlot.Q, 1150);
