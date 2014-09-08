@@ -15,11 +15,14 @@ namespace EasyEzreal
         public Obj_AI_Hero Player;
         public Menu Menu;
         public Orbwalking.Orbwalker Orbwalker;
+        public List<string> Skins = new List<string>();
         public Dictionary<string, Spell> Spells = new Dictionary<string, Spell>();
 
         private int tick = 1000 / 20;
         private int lastTick = Environment.TickCount;
         private string ChampionName;
+        private int ChampSkin;
+        private bool InitialSkin = true;
 
         public Champion(string name)
         {
@@ -36,8 +39,17 @@ namespace EasyEzreal
                 return;
 
             CreateSpells();
+            CreateSkins();
 
             Menu = new Menu("Easy" + ChampionName, "Easy" + ChampionName, true);
+
+            if(Skins.Count > 0)
+            {
+                Menu.AddSubMenu(new Menu("Skin Changer", "Skin Changer"));
+                Menu.SubMenu("Skin Changer").AddItem(new MenuItem("Skin_enabled", "Enable skin changer").SetValue(false));
+                Menu.SubMenu("Skin Changer").AddItem(new MenuItem("Skin_select", "Skins").SetValue(new StringList(Skins.ToArray())));
+                ChampSkin = Menu.Item("Skin_select").GetValue<StringList>().SelectedIndex;
+            }
 
             Menu.AddSubMenu(new Menu("Target Selector", "Target Selector"));
             SimpleTs.AddToMenu(Menu.SubMenu("Target Selector"));
@@ -82,6 +94,8 @@ namespace EasyEzreal
             if (Environment.TickCount < lastTick + tick) return;
             lastTick = Environment.TickCount;
 
+            UpdateSkin();
+
             Update();
 
             if ((Menu.Item("Recall_block").GetValue<bool>() && Player.HasBuff("Recall")) || Player.IsWindingUp)
@@ -90,11 +104,37 @@ namespace EasyEzreal
             if (Orbwalker.ActiveMode == Orbwalking.OrbwalkingMode.Combo) Combo();
 
             if (Orbwalker.ActiveMode == Orbwalking.OrbwalkingMode.Mixed) Harass();
-
+            
             Auto();
 
         }
 
+        private void UpdateSkin()
+        {
+            if (Menu.Item("Skin_enabled").GetValue<bool>())
+            {
+                int skin = Menu.Item("Skin_select").GetValue<StringList>().SelectedIndex;
+                if (InitialSkin || skin != ChampSkin)
+                {
+                    GenerateSkinPacket(ChampionName, skin);
+                    ChampSkin = skin;
+                    InitialSkin = false;
+                }
+            }
+        }
+
+        //By Trelli
+        private static void GenerateSkinPacket(string currentChampion, int skinNumber)
+        {
+            int netID = ObjectManager.Player.NetworkId;
+            GamePacket model = Packet.S2C.UpdateModel.Encoded(new Packet.S2C.UpdateModel.Struct(ObjectManager.Player.NetworkId, skinNumber, currentChampion));
+            model.Process(PacketChannel.S2C);
+        }
+
+        protected virtual void CreateSkins()
+        {
+
+        }
         protected virtual void CreateSpells()
         {
 
