@@ -71,18 +71,18 @@ namespace EasyEzreal
 
         protected override void Combo()
         {
-            if (Menu.Item("Combo_q").GetValue<bool>()) CastQ();
-            if (Menu.Item("Combo_w").GetValue<bool>()) CastW();
+            if (Menu.Item("Combo_q").GetValue<bool>()) Cast("Q", SimpleTs.DamageType.Physical);
+            if (Menu.Item("Combo_w").GetValue<bool>()) Cast("W", SimpleTs.DamageType.Physical);
         }
         protected override void Harass()
         {
-            if (Menu.Item("Harass_q").GetValue<bool>()) CastQ();
-            if (Menu.Item("Harass_w").GetValue<bool>()) CastW();
+            if (Menu.Item("Harass_q").GetValue<bool>()) Cast("Q", SimpleTs.DamageType.Physical);
+            if (Menu.Item("Harass_w").GetValue<bool>()) Cast("W", SimpleTs.DamageType.Physical);
         }
         protected override void Auto()
         {
-            if (Menu.Item("Auto_q").GetValue<bool>()) CastQ();
-            if (Menu.Item("Auto_w").GetValue<bool>()) CastW();
+            if (Menu.Item("Auto_q").GetValue<bool>()) Cast("Q", SimpleTs.DamageType.Physical);
+            if (Menu.Item("Auto_w").GetValue<bool>()) Cast("W", SimpleTs.DamageType.Physical);
             if (Menu.Item("Auto_r").GetValue<bool>()) CastR();
         }
         protected override void Drawing()
@@ -106,26 +106,6 @@ namespace EasyEzreal
             return (float)DamageLib.getDmg(hero, DamageLib.SpellType.R) * 0.8f;
         }
 
-        void CastQ()
-        {
-            if (!Spells["Q"].IsReady()) return;
-
-            Obj_AI_Hero target = SimpleTs.GetTarget(Spells["Q"].Range, SimpleTs.DamageType.Physical);
-            if (target == null) return;
-
-            if (Spells["Q"].GetPrediction(target).Hitchance >= HitChance.High)
-                Spells["Q"].Cast(target, true);
-        }
-        void CastW()
-        {
-            if (!Spells["W"].IsReady()) return;
-
-            Obj_AI_Hero target = SimpleTs.GetTarget(Spells["W"].Range, SimpleTs.DamageType.Physical);
-            if (target == null) return;
-
-            if (Spells["W"].GetPrediction(target).Hitchance >= HitChance.High)
-                Spells["W"].Cast(target, true);
-        }
         void CastR()
         {
             if (!Spells["R"].IsReady()) return;

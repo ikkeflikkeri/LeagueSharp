@@ -82,35 +82,35 @@ namespace EasyKogMaw
 
         protected override void Combo()
         {
-            if (Menu.Item("Combo_q").GetValue<bool>()) CastQ();
+            if (Menu.Item("Combo_q").GetValue<bool>()) Cast("Q", SimpleTs.DamageType.Magical, true);
             if (Menu.Item("Combo_w").GetValue<bool>()) CastW();
-            if (Menu.Item("Combo_e").GetValue<bool>()) CastE();
+            if (Menu.Item("Combo_e").GetValue<bool>()) Cast("E", SimpleTs.DamageType.Magical, true);
             if (Menu.Item("Combo_r").GetValue<bool>())
             {
                 if (GetRStacks() < Menu.Item("Combo_maxrstacks").GetValue<Slider>().Value)
-                    CastR();
+                    Cast("R", SimpleTs.DamageType.Magical, true);
             }
         }
         protected override void Harass()
         {
-            if (Menu.Item("Harass_q").GetValue<bool>()) CastQ();
+            if (Menu.Item("Harass_q").GetValue<bool>()) Cast("Q", SimpleTs.DamageType.Magical, true);
             if (Menu.Item("Harass_w").GetValue<bool>()) CastW();
-            if (Menu.Item("Harass_e").GetValue<bool>()) CastE();
+            if (Menu.Item("Harass_e").GetValue<bool>()) Cast("E", SimpleTs.DamageType.Magical, true);
             if (Menu.Item("Harass_r").GetValue<bool>())
             {
                 if (GetRStacks() < Menu.Item("Harass_maxrstacks").GetValue<Slider>().Value)
-                    CastR();
+                    Cast("R", SimpleTs.DamageType.Magical, true);
             }
         }
         protected override void Auto()
         {
-            if (Menu.Item("Auto_q").GetValue<bool>()) CastQ();
+            if (Menu.Item("Auto_q").GetValue<bool>()) Cast("Q", SimpleTs.DamageType.Magical, true);
             if (Menu.Item("Auto_w").GetValue<bool>()) CastW();
-            if (Menu.Item("Auto_e").GetValue<bool>()) CastE();
+            if (Menu.Item("Auto_e").GetValue<bool>()) Cast("E", SimpleTs.DamageType.Magical, true);
             if (Menu.Item("Auto_r").GetValue<bool>())
             {
                 if(GetRStacks() < Menu.Item("Auto_maxrstacks").GetValue<Slider>().Value)
-                    CastR();
+                    Cast("R", SimpleTs.DamageType.Magical, true);
             }
         }
         protected override void Drawing()
@@ -141,21 +141,11 @@ namespace EasyKogMaw
                 foreach (var enemy in ObjectManager.Get<Obj_AI_Hero>())
                 {
                     if (enemy.IsEnemy && enemy.IsValid && enemy.Distance(Player) < Spells["R"].Range && HealthPrediction.GetHealthPrediction(enemy, (int)Spells["R"].Delay * 1000) < DamageLib.getDmg(enemy, DamageLib.SpellType.R) && enemy.IsValidTarget(Spells["R"].Range) && Spells["R"].GetPrediction(enemy).Hitchance >= HitChance.High)
-                        Spells["R"].Cast(enemy, true);
+                        Cast("R", SimpleTs.DamageType.Magical, true);
                 }
             }
         }
 
-        private void CastQ()
-        {
-            if (!Spells["Q"].IsReady()) return;
-
-            Obj_AI_Hero target = SimpleTs.GetTarget(Spells["Q"].Range, SimpleTs.DamageType.Magical);
-            if (target == null) return;
-
-            if (target.IsValidTarget(Spells["Q"].Range) && Spells["Q"].GetPrediction(target).Hitchance >= HitChance.High)
-                Spells["Q"].Cast(target, true);
-        }
         private void CastW()
         {
             if (!Spells["W"].IsReady()) return;
@@ -164,26 +154,6 @@ namespace EasyKogMaw
             if (target == null) return;
 
             Spells["W"].Cast();
-        }
-        private void CastE()
-        {
-            if (!Spells["E"].IsReady()) return;
-
-            Obj_AI_Hero target = SimpleTs.GetTarget(Spells["E"].Range, SimpleTs.DamageType.Magical);
-            if (target == null) return;
-
-            if (target.IsValidTarget(Spells["E"].Range) && Spells["E"].GetPrediction(target).Hitchance >= HitChance.High)
-                Spells["E"].Cast(target, true);
-        }
-        private void CastR()
-        {
-            if (!Spells["R"].IsReady()) return;
-
-            Obj_AI_Hero target = SimpleTs.GetTarget(Spells["R"].Range, SimpleTs.DamageType.Magical);
-            if (target == null) return;
-
-            if (target.IsValidTarget(Spells["R"].Range) && Spells["R"].GetPrediction(target).Hitchance >= HitChance.High)
-                Spells["R"].Cast(target, true);
         }
 
         private int GetRStacks()

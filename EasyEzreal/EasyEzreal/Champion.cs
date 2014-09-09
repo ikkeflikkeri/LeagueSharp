@@ -43,7 +43,7 @@ namespace EasyEzreal
 
             Menu = new Menu("Easy" + ChampionName, "Easy" + ChampionName, true);
 
-            if(Skins.Count > 0)
+            if (Skins.Count > 0)
             {
                 Menu.AddSubMenu(new Menu("Skin Changer", "Skin Changer"));
                 Menu.SubMenu("Skin Changer").AddItem(new MenuItem("Skin_enabled", "Enable skin changer").SetValue(false));
@@ -104,7 +104,7 @@ namespace EasyEzreal
             if (Orbwalker.ActiveMode == Orbwalking.OrbwalkingMode.Combo) Combo();
 
             if (Orbwalker.ActiveMode == Orbwalking.OrbwalkingMode.Mixed) Harass();
-            
+
             Auto();
 
         }
@@ -129,6 +129,17 @@ namespace EasyEzreal
             int netID = ObjectManager.Player.NetworkId;
             GamePacket model = Packet.S2C.UpdateModel.Encoded(new Packet.S2C.UpdateModel.Struct(ObjectManager.Player.NetworkId, skinNumber, currentChampion));
             model.Process(PacketChannel.S2C);
+        }
+
+        protected void Cast(string spell, SimpleTs.DamageType damageType, bool packet = true, bool aoe = false)
+        {
+            if (!Spells[spell].IsReady()) return;
+
+            Obj_AI_Hero target = SimpleTs.GetTarget(Spells[spell].Range, damageType);
+            if (target == null) return;
+
+            if (target.IsValidTarget(Spells[spell].Range) && Spells[spell].GetPrediction(target).Hitchance >= HitChance.High)
+                Spells[spell].Cast(target, packet, aoe);
         }
 
         protected virtual void CreateSkins()

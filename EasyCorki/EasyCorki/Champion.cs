@@ -130,6 +130,17 @@ namespace EasyCorki
             model.Process(PacketChannel.S2C);
         }
 
+        protected void Cast(string spell, SimpleTs.DamageType damageType, bool packet = true, bool aoe = false)
+        {
+            if (!Spells[spell].IsReady()) return;
+
+            Obj_AI_Hero target = SimpleTs.GetTarget(Spells[spell].Range, damageType);
+            if (target == null) return;
+
+            if (target.IsValidTarget(Spells[spell].Range) && Spells[spell].GetPrediction(target).Hitchance >= HitChance.High)
+                Spells[spell].Cast(target, packet, aoe);
+        }
+
         protected virtual void CreateSkins()
         {
 

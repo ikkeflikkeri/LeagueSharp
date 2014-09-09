@@ -56,11 +56,13 @@ namespace EasyCorki
             Menu.SubMenu("Harass").AddItem(new MenuItem("Harass_q", "Use Q").SetValue(true));
             Menu.SubMenu("Harass").AddItem(new MenuItem("Harass_e", "Use E").SetValue(false));
             Menu.SubMenu("Harass").AddItem(new MenuItem("Harass_r", "Use R").SetValue(true));
+            Menu.SubMenu("Harass").AddItem(new MenuItem("Harass_rlimit", "Keep missiles").SetValue(new Slider(3, 0, 7)));
 
             Menu.AddSubMenu(new Menu("Auto", "Auto"));
             Menu.SubMenu("Auto").AddItem(new MenuItem("Auto_q", "Use Q").SetValue(true));
             Menu.SubMenu("Auto").AddItem(new MenuItem("Auto_e", "Use E").SetValue(false));
             Menu.SubMenu("Auto").AddItem(new MenuItem("Auto_r", "Use R").SetValue(false));
+            Menu.SubMenu("Auto").AddItem(new MenuItem("Auto_rlimit", "Keep missiles").SetValue(new Slider(3, 0, 7)));
 
             Menu.AddSubMenu(new Menu("Drawing", "Drawing"));
             Menu.SubMenu("Drawing").AddItem(new MenuItem("Drawing_q", "Q Range").SetValue(new Circle(true, Color.FromArgb(100, 0, 255, 0))));
@@ -69,21 +71,21 @@ namespace EasyCorki
         }
         protected override void Combo()
         {
-            if (Menu.Item("Combo_q").GetValue<bool>()) CastQ();
-            if (Menu.Item("Combo_e").GetValue<bool>()) CastE();
-            if (Menu.Item("Combo_r").GetValue<bool>()) CastR();
+            if (Menu.Item("Combo_q").GetValue<bool>()) Cast("Q", SimpleTs.DamageType.Magical, true);
+            if (Menu.Item("Combo_e").GetValue<bool>()) Cast("E", SimpleTs.DamageType.Physical, true);
+            if (Menu.Item("Combo_r").GetValue<bool>()) Cast("R", SimpleTs.DamageType.Magical, true);
         }
         protected override void Harass()
         {
-            if (Menu.Item("Harass_q").GetValue<bool>()) CastQ();
-            if (Menu.Item("Harass_e").GetValue<bool>()) CastE();
-            if (Menu.Item("Harass_r").GetValue<bool>()) CastR();
+            if (Menu.Item("Harass_q").GetValue<bool>()) Cast("Q", SimpleTs.DamageType.Magical, true);
+            if (Menu.Item("Harass_e").GetValue<bool>()) Cast("E", SimpleTs.DamageType.Physical, true);
+            if (Menu.Item("Harass_r").GetValue<bool>() && missiles() > Menu.Item("Harass_rlimit").GetValue<Slider>().Value) Cast("R", SimpleTs.DamageType.Magical, true);
         }
         protected override void Auto()
         {
-            if (Menu.Item("Auto_q").GetValue<bool>()) CastQ();
-            if (Menu.Item("Auto_e").GetValue<bool>()) CastE();
-            if (Menu.Item("Auto_r").GetValue<bool>()) CastR();
+            if (Menu.Item("Auto_q").GetValue<bool>()) Cast("Q", SimpleTs.DamageType.Magical, true);
+            if (Menu.Item("Auto_e").GetValue<bool>()) Cast("E", SimpleTs.DamageType.Physical, true);
+            if (Menu.Item("Auto_r").GetValue<bool>() && missiles() > Menu.Item("Auto_rlimit").GetValue<Slider>().Value) Cast("R", SimpleTs.DamageType.Magical, true);
         }
         protected override void Drawing()
         {
@@ -122,34 +124,10 @@ namespace EasyCorki
 
             return damage;
         }
-        private void CastQ()
+        
+        private int missiles()
         {
-            if (!Spells["Q"].IsReady()) return;
-
-            Obj_AI_Hero target = SimpleTs.GetTarget(Spells["Q"].Range, SimpleTs.DamageType.Magical);
-            if (target == null) return;
-
-            if (Spells["Q"].GetPrediction(target).Hitchance >= HitChance.High)
-                Spells["Q"].Cast(target, true);
-        }
-        private void CastE()
-        {
-            if (!Spells["E"].IsReady()) return;
-
-            Obj_AI_Hero target = SimpleTs.GetTarget(Spells["E"].Range, SimpleTs.DamageType.Physical);
-            if (target == null) return;
-
-            Spells["E"].Cast();
-        }
-        private void CastR()
-        {
-            if (!Spells["R"].IsReady()) return;
-
-            Obj_AI_Hero target = SimpleTs.GetTarget(Spells["R"].Range, SimpleTs.DamageType.Magical);
-            if (target == null) return;
-
-            if (Spells["R"].GetPrediction(target).Hitchance >= HitChance.High)
-                Spells["R"].Cast(target, true);
+            return Player.Spellbook.GetSpell(SpellSlot.R).Ammo;
         }
     }
 }
