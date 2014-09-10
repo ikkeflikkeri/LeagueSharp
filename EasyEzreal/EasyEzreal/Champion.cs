@@ -128,18 +128,28 @@ abstract class Champion
 		model.Process(PacketChannel.S2C);
 	}
 
-	protected void Cast(string spell, SimpleTs.DamageType damageType, bool packet = true, bool aoe = false)
-	{
-		if (!Spells[spell].IsReady()) return;
+    protected void Cast(string spell, SimpleTs.DamageType damageType, bool packet = true, bool aoe = false)
+    {
+        if (Spells[spell].IsSkillshot) CastSkillshot(spell, damageType, packet, aoe);
+        if (Spells[spell].IsChargedSpell) CastChargedSpell(spell, damageType, packet, aoe);
+        CastOnUnit(spell, damageType, packet);
+    }
 
-		Obj_AI_Hero target = SimpleTs.GetTarget(Spells[spell].Range, damageType);
-		if (target == null) return;
+    private void CastChargedSpell(string spell, SimpleTs.DamageType damageType, bool packet, bool aoe)
+    {
 
-		if (target.IsValidTarget(Spells[spell].Range) && Spells[spell].GetPrediction(target).Hitchance >= HitChance.High)
-			Spells[spell].Cast(target, packet, aoe);
-	}
+    }
+    private void CastSkillshot(string spell, SimpleTs.DamageType damageType, bool packet, bool aoe)
+    {
+        if (!Spells[spell].IsReady()) return;
 
-    protected void CastOnUnit(string spell, SimpleTs.DamageType damageType, bool packet = true)
+        Obj_AI_Hero target = SimpleTs.GetTarget(Spells[spell].Range, damageType);
+        if (target == null) return;
+
+        if (target.IsValidTarget(Spells[spell].Range) && Spells[spell].GetPrediction(target).Hitchance >= HitChance.High)
+            Spells[spell].Cast(target, packet, aoe);
+    }
+    private void CastOnUnit(string spell, SimpleTs.DamageType damageType, bool packet)
     {
         if (!Spells[spell].IsReady()) return;
 
