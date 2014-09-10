@@ -68,22 +68,22 @@ namespace EasyRyze
         protected override void Combo()
         {
             if (Menu.Item("Combo_r").GetValue<bool>()) CastR();
-            if (Menu.Item("Combo_w").GetValue<bool>()) CastW();
-            if (Menu.Item("Combo_q").GetValue<bool>()) CastQ();
-            if (Menu.Item("Combo_e").GetValue<bool>()) CastE();
+            if (Menu.Item("Combo_w").GetValue<bool>()) Cast("W", SimpleTs.DamageType.Magical, false);
+            if (Menu.Item("Combo_q").GetValue<bool>()) Cast("Q", SimpleTs.DamageType.Magical, false);
+            if (Menu.Item("Combo_e").GetValue<bool>()) Cast("E", SimpleTs.DamageType.Magical, false);
         }
         protected override void Harass()
         {
-            if (Menu.Item("Harass_w").GetValue<bool>()) CastW();
-            if (Menu.Item("Harass_q").GetValue<bool>()) CastQ();
-            if (Menu.Item("Harass_e").GetValue<bool>()) CastE();
+            if (Menu.Item("Harass_w").GetValue<bool>()) Cast("W", SimpleTs.DamageType.Magical, false);
+            if (Menu.Item("Harass_q").GetValue<bool>()) Cast("Q", SimpleTs.DamageType.Magical, false);
+            if (Menu.Item("Harass_e").GetValue<bool>()) Cast("E", SimpleTs.DamageType.Magical, false);
         }
         protected override void Auto()
         {
-            if (Menu.Item("Auto_w").GetValue<bool>()) CastW();
-            if (Menu.Item("Auto_q").GetValue<bool>()) CastQ();
-            if (Menu.Item("Auto_e").GetValue<bool>()) CastE();
-            if (Menu.Item("Auto_r").GetValue<Slider>().Value <= EnemiesAroundPlayer(Player, Spells["R"].Range))
+            if (Menu.Item("Auto_w").GetValue<bool>()) Cast("W", SimpleTs.DamageType.Magical, false);
+            if (Menu.Item("Auto_q").GetValue<bool>()) Cast("Q", SimpleTs.DamageType.Magical, false);
+            if (Menu.Item("Auto_e").GetValue<bool>()) Cast("E", SimpleTs.DamageType.Magical, false);
+            if (Menu.Item("Auto_r").GetValue<Slider>().Value <= Utility.CountEnemysInRange((int)Spells["R"].Range, Player))
                 Spells["R"].Cast();
         }
         protected override void Drawing()
@@ -132,33 +132,6 @@ namespace EasyRyze
             return damage;
         }
 
-        private void CastQ()
-        {
-            if (!Spells["Q"].IsReady()) return;
-
-            Obj_AI_Hero target = SimpleTs.GetTarget(Spells["Q"].Range, SimpleTs.DamageType.Magical);
-            if (target == null) return;
-
-            Spells["Q"].CastOnUnit(target);
-        }
-        private void CastW()
-        {
-            if (!Spells["W"].IsReady()) return;
-
-            Obj_AI_Hero target = SimpleTs.GetTarget(Spells["W"].Range, SimpleTs.DamageType.Magical);
-            if (target == null) return;
-
-            Spells["W"].CastOnUnit(target);
-        }
-        private void CastE()
-        {
-            if (!Spells["E"].IsReady()) return;
-
-            Obj_AI_Hero target = SimpleTs.GetTarget(Spells["E"].Range, SimpleTs.DamageType.Magical);
-            if (target == null) return;
-
-            Spells["E"].CastOnUnit(target);
-        }
         private void CastR()
         {
             if (!Spells["R"].IsReady()) return;
@@ -168,22 +141,6 @@ namespace EasyRyze
             if (ComboDamage(target) < target.Health) return;
 
             Spells["R"].Cast();
-        }
-
-        private int EnemiesAroundPlayer(Obj_AI_Hero player, float range)
-        {
-            int enemies = 0;
-
-            foreach (var enemy in ObjectManager.Get<Obj_AI_Hero>())
-            {
-                if(!enemy.IsEnemy && enemy.IsValid && !enemy.IsDead)
-                    continue;
-
-                if(distance(player, enemy) < range)
-                    enemies++;
-            }
-
-            return enemies;
         }
 
         private float distance(Obj_AI_Hero player, Obj_AI_Hero enemy)
