@@ -24,7 +24,7 @@ abstract class Champion
 	public Champion(string name)
 	{
 		ChampionName = name;
-
+       
 		CustomEvents.Game.OnGameLoad += Game_OnGameLoad;
 	}
 
@@ -32,7 +32,7 @@ abstract class Champion
 	{
 		Player = ObjectManager.Player;
 
-		if (ChampionName != Player.ChampionName)
+		if (ChampionName.ToLower() != Player.ChampionName.ToLower())
 			return;
 
 		CreateSpells();
