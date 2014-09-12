@@ -137,7 +137,20 @@ abstract class Champion
 
     private void CastChargedSpell(string spell, SimpleTs.DamageType damageType, bool packet, bool aoe)
     {
+        if (!Spells[spell].IsReady())
+            return;
 
+        Obj_AI_Hero target = SimpleTs.GetTarget(Spells[spell].ChargedMaxRange, damageType);
+        if (target == null || !target.IsValidTarget(Spells[spell].ChargedMaxRange))
+            return;
+
+        if(!Spells[spell].IsCharging)
+            Spells[spell].StartCharging();
+        else
+        {
+            if (Spells[spell].GetPrediction(target).Hitchance >= HitChance.High)
+                Spells[spell].Cast(target, packet, aoe);
+        }
     }
     private void CastSkillshot(string spell, SimpleTs.DamageType damageType, bool packet, bool aoe)
     {
@@ -191,4 +204,14 @@ abstract class Champion
 	{
 
 	}
+
+    protected void DrawBuffs()
+    {
+        float y = 0;
+        foreach (var t in ObjectManager.Player.Buffs.Select(b => b.DisplayName + " - " + b.IsActive + " - " + (b.EndTime > Game.Time) + " - " + b.IsPositive))
+        {
+            LeagueSharp.Drawing.DrawText(0, y, System.Drawing.Color.Wheat, t);
+            y += 16;
+        }
+    }
 }
