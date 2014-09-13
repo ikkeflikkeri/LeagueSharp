@@ -20,10 +20,12 @@ abstract class Champion
 	private string ChampionName;
 	private int ChampSkin;
 	private bool InitialSkin = true;
+    private bool isDebugging;
 
-	public Champion(string name)
+	public Champion(string name, bool debug = false)
 	{
 		ChampionName = name;
+        isDebugging = debug;
        
 		CustomEvents.Game.OnGameLoad += Game_OnGameLoad;
 	}
@@ -84,6 +86,8 @@ abstract class Champion
 	void Drawing_OnDraw(EventArgs args)
 	{
 		Drawing();
+
+        if (isDebugging) DrawBuffs();
 	}
 
 	void Game_OnGameUpdate(EventArgs args)
