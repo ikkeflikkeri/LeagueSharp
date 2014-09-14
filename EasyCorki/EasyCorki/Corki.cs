@@ -15,7 +15,7 @@ namespace EasyCorki
         {
 
         }
-        protected override void CreateSkins()
+        protected override void InitializeSkins(ref SkinManager Skins)
         {
             Skins.Add("Corki");
             Skins.Add("UFO Corki");
@@ -25,7 +25,7 @@ namespace EasyCorki
             Skins.Add("Urfrider Corki");
             Skins.Add("Dragonwing Corki");
         }
-        protected override void CreateSpells()
+        protected override void InitializeSpells()
         {
             Spell Q = new Spell(SpellSlot.Q, 825f);
             Q.SetSkillshot(0.3f, 250f, 1250f, false, SkillshotType.SkillshotCircle);

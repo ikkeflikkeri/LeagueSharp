@@ -15,7 +15,7 @@ namespace EasyEzreal
         {
 
         }
-        protected override void CreateSkins()
+        protected override void InitializeSkins(ref SkinManager Skins)
         {
             Skins.Add("Ezreal");
             Skins.Add("Nottingham Ezreal");
@@ -26,7 +26,7 @@ namespace EasyEzreal
             Skins.Add("TPA Ezreal");
             Skins.Add("Debonair Ezreal");
         }
-        protected override void CreateSpells()
+        protected override void InitializeSpells()
         {
             Spell Q = new Spell(SpellSlot.Q, 1150);
             Q.SetSkillshot(0.25f, 60f, 2000f, true, SkillshotType.SkillshotLine);

@@ -16,7 +16,7 @@ namespace EasyKogMaw
             
         }
 
-        protected override void CreateSkins()
+        protected override void InitializeSkins(ref SkinManager Skins)
         {
             Skins.Add("Kog'Maw");
             Skins.Add("Caterpillar Kog'Maw");
@@ -27,7 +27,7 @@ namespace EasyKogMaw
             Skins.Add("Deep Sea Kog'Maw");
             Skins.Add("Jurassic Kog'Maw");
         }
-        protected override void CreateSpells()
+        protected override void InitializeSpells()
         {
             Spell Q = new Spell(SpellSlot.Q, 950);
             Q.SetSkillshot(0.25f, 70f, 1650f, true, SkillshotType.SkillshotLine);

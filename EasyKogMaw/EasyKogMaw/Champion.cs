@@ -12,15 +12,14 @@ abstract class Champion
 	public Obj_AI_Hero Player;
 	public Menu Menu;
 	public Orbwalking.Orbwalker Orbwalker;
-	public List<string> Skins = new List<string>();
 	public Dictionary<string, Spell> Spells = new Dictionary<string, Spell>();
 
 	private int tick = 1000 / 20;
 	private int lastTick = Environment.TickCount;
 	private string ChampionName;
-	private int ChampSkin;
-	private bool InitialSkin = true;
     private bool isDebugging;
+
+    private SkinManager SkinManager;
 
 	public Champion(string name, bool debug = false)
 	{
@@ -37,18 +36,14 @@ abstract class Champion
 		if (ChampionName.ToLower() != Player.ChampionName.ToLower())
 			return;
 
-		CreateSpells();
-		CreateSkins();
+        SkinManager = new SkinManager();
+
+		InitializeSpells();
+		InitializeSkins(ref SkinManager);
 
 		Menu = new Menu("Easy" + ChampionName, "Easy" + ChampionName, true);
 
-		if (Skins.Count > 0)
-		{
-			Menu.AddSubMenu(new Menu("Skin Changer", "Skin Changer"));
-			Menu.SubMenu("Skin Changer").AddItem(new MenuItem("Skin_enabled", "Enable skin changer").SetValue(false));
-			Menu.SubMenu("Skin Changer").AddItem(new MenuItem("Skin_select", "Skins").SetValue(new StringList(Skins.ToArray())));
-			ChampSkin = Menu.Item("Skin_select").GetValue<StringList>().SelectedIndex;
-		}
+        SkinManager.AddToMenu(ref Menu);
 
 		Menu.AddSubMenu(new Menu("Target Selector", "Target Selector"));
 		SimpleTs.AddToMenu(Menu.SubMenu("Target Selector"));
@@ -95,7 +90,7 @@ abstract class Champion
 		if (Environment.TickCount < lastTick + tick) return;
 		lastTick = Environment.TickCount;
 
-		UpdateSkin();
+        SkinManager.Update();
 
 		Update();
 
@@ -110,33 +105,21 @@ abstract class Champion
 
 	}
 
-	private void UpdateSkin()
-	{
-		if (Menu.Item("Skin_enabled").GetValue<bool>())
-		{
-			int skin = Menu.Item("Skin_select").GetValue<StringList>().SelectedIndex;
-			if (InitialSkin || skin != ChampSkin)
-			{
-				GenerateSkinPacket(ChampionName, skin);
-				ChampSkin = skin;
-				InitialSkin = false;
-			}
-		}
-	}
-
-	//By Trelli
-	private static void GenerateSkinPacket(string currentChampion, int skinNumber)
-	{
-		int netID = ObjectManager.Player.NetworkId;
-		GamePacket model = Packet.S2C.UpdateModel.Encoded(new Packet.S2C.UpdateModel.Struct(ObjectManager.Player.NetworkId, skinNumber, currentChampion));
-		model.Process(PacketChannel.S2C);
-	}
-
     protected void Cast(string spell, SimpleTs.DamageType damageType, bool packet = true, bool aoe = false)
     {
         if (Spells[spell].IsSkillshot) CastSkillshot(spell, damageType, packet, aoe);
         if (Spells[spell].IsChargedSpell) CastChargedSpell(spell, damageType, packet, aoe);
         CastOnUnit(spell, damageType, packet);
+    }
+
+    protected void CastSelf(string spell, SimpleTs.DamageType damageType, float extraRange = 0)
+    {
+        if (!Spells[spell].IsReady()) return;
+
+        Obj_AI_Hero target = SimpleTs.GetTarget(Spells[spell].Range + extraRange, damageType);
+        if (target == null) return;
+
+        Spells[spell].Cast();
     }
 
     private void CastChargedSpell(string spell, SimpleTs.DamageType damageType, bool packet, bool aoe)
@@ -176,11 +159,11 @@ abstract class Champion
         Spells[spell].CastOnUnit(target, packet);
     }
 
-	protected virtual void CreateSkins()
+	protected virtual void InitializeSkins(ref SkinManager Skins)
 	{
 
 	}
-	protected virtual void CreateSpells()
+    protected virtual void InitializeSpells()
 	{
 
 	}
@@ -217,5 +200,57 @@ abstract class Champion
             LeagueSharp.Drawing.DrawText(0, y, System.Drawing.Color.Wheat, t);
             y += 16;
         }
+    }
+}
+
+class SkinManager
+{
+    private List<string> Skins = new List<string>();
+    private Menu Menu;
+    private int SelectedSkin;
+    private bool Initialize = true;
+
+    public SkinManager()
+    {
+
+    }
+
+    public void AddToMenu(ref Menu menu)
+    {
+        Menu = menu;
+
+        if (Skins.Count > 0)
+        {
+            Menu.AddSubMenu(new Menu("Skin Changer", "Skin Changer"));
+            Menu.SubMenu("Skin Changer").AddItem(new MenuItem("Skin_enabled", "Enable skin changer").SetValue(false));
+            Menu.SubMenu("Skin Changer").AddItem(new MenuItem("Skin_select", "Skins").SetValue(new StringList(Skins.ToArray())));
+            SelectedSkin = Menu.Item("Skin_select").GetValue<StringList>().SelectedIndex;
+        }
+    }
+
+    public void Add(string skin)
+    {
+        Skins.Add(skin);
+    }
+
+    public void Update()
+    {
+        if (Menu.Item("Skin_enabled").GetValue<bool>())
+        {
+            int skin = Menu.Item("Skin_select").GetValue<StringList>().SelectedIndex;
+            if (Initialize || skin != SelectedSkin)
+            {
+                GenerateSkinPacket(skin);
+                SelectedSkin = skin;
+                Initialize = false;
+            }
+        }
+    }
+
+    private static void GenerateSkinPacket(int skinNumber)
+    {
+        int netID = ObjectManager.Player.NetworkId;
+        GamePacket model = Packet.S2C.UpdateModel.Encoded(new Packet.S2C.UpdateModel.Struct(ObjectManager.Player.NetworkId, skinNumber, ObjectManager.Player.ChampionName));
+        model.Process(PacketChannel.S2C);
     }
 }
