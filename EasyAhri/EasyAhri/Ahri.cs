@@ -28,7 +28,7 @@ namespace EasyAhri
         protected override void InitializeSpells()
         {
             Spell Q = new Spell(SpellSlot.Q, 880);
-            Q.SetSkillshot(0.50f, 100f, 1100f, false, SkillshotType.SkillshotLine);
+            Q.SetSkillshot(0.50f, 100f, 1050f, false, SkillshotType.SkillshotLine);
 
             Spell W = new Spell(SpellSlot.W, 800);
 
