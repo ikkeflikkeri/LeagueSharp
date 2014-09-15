@@ -28,12 +28,12 @@ namespace EasyAhri
         protected override void InitializeSpells()
         {
             Spell Q = new Spell(SpellSlot.Q, 880);
-            Q.SetSkillshot(0.50f, 100f, 1050f, false, SkillshotType.SkillshotLine);
+            Q.SetSkillshot(0.25f, 100f, 1100f, false, SkillshotType.SkillshotLine);
 
             Spell W = new Spell(SpellSlot.W, 800);
 
             Spell E = new Spell(SpellSlot.E, 975);
-            E.SetSkillshot(0.50f, 60f, 1200f, true, SkillshotType.SkillshotLine);
+            E.SetSkillshot(0.25f, 60f, 1200f, true, SkillshotType.SkillshotLine);
 
             Spells.Add("Q", Q);
             Spells.Add("W", W);
@@ -61,6 +61,7 @@ namespace EasyAhri
             Menu.SubMenu("Drawing").AddItem(new MenuItem("Drawing_q", "Q Range").SetValue(new Circle(true, Color.FromArgb(100, 0, 255, 0))));
             Menu.SubMenu("Drawing").AddItem(new MenuItem("Drawing_w", "W Range").SetValue(new Circle(true, Color.FromArgb(100, 0, 255, 0))));
             Menu.SubMenu("Drawing").AddItem(new MenuItem("Drawing_e", "E Range").SetValue(new Circle(true, Color.FromArgb(100, 0, 255, 0))));
+            Menu.SubMenu("Drawing").AddItem(new MenuItem("Drawing_damage", "Combo Damage Indicator").SetValue(true));
         }
 
         protected override void Combo()
@@ -94,6 +95,25 @@ namespace EasyAhri
                 Utility.DrawCircle(Player.Position, Spells["W"].Range, wCircle.Color);
             if (eCircle.Active)
                 Utility.DrawCircle(Player.Position, Spells["E"].Range, eCircle.Color);
+
+            Utility.HpBarDamageIndicator.DamageToUnit = ComboDamage;
+            Utility.HpBarDamageIndicator.Enabled = Menu.Item("Drawing_damage").GetValue<bool>();
+        }
+
+        private float ComboDamage(Obj_AI_Hero hero)
+        {
+            float damage = 0;
+
+            if (Spells["Q"].IsReady())
+                damage += (float)DamageLib.getDmg(hero, DamageLib.SpellType.Q);
+            if (Spells["W"].IsReady())
+                damage += (float)DamageLib.getDmg(hero, DamageLib.SpellType.W);
+            if (Spells["E"].IsReady())
+                damage += (float)DamageLib.getDmg(hero, DamageLib.SpellType.E);
+            if (Player.Spellbook.GetSpell(SpellSlot.R).State == SpellState.Ready)
+                damage += (float)DamageLib.getDmg(hero, DamageLib.SpellType.R);
+
+            return damage;
         }
     }
 }
