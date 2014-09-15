@@ -37,9 +37,12 @@ namespace EasyAhri
             Spell E = new Spell(SpellSlot.E, 975);
             E.SetSkillshot(0.25f, 60f, 1200f, true, SkillshotType.SkillshotLine);
 
+            Spell R = new Spell(SpellSlot.R, 450f);
+
             Spells.Add("Q", Q);
             Spells.Add("W", W);
             Spells.Add("E", E);
+            Spells.Add("R", R);
         }
 
         protected override void CreateMenu()
@@ -63,6 +66,7 @@ namespace EasyAhri
             Menu.SubMenu("Drawing").AddItem(new MenuItem("Drawing_q", "Q Range").SetValue(new Circle(true, Color.FromArgb(100, 0, 255, 0))));
             Menu.SubMenu("Drawing").AddItem(new MenuItem("Drawing_w", "W Range").SetValue(new Circle(true, Color.FromArgb(100, 0, 255, 0))));
             Menu.SubMenu("Drawing").AddItem(new MenuItem("Drawing_e", "E Range").SetValue(new Circle(true, Color.FromArgb(100, 0, 255, 0))));
+            Menu.SubMenu("Drawing").AddItem(new MenuItem("Drawing_r", "R Range").SetValue(new Circle(true, Color.FromArgb(100, 0, 255, 0))));
             Menu.SubMenu("Drawing").AddItem(new MenuItem("Drawing_damage", "Combo Damage Indicator").SetValue(true));
         }
 
@@ -90,13 +94,16 @@ namespace EasyAhri
             Circle qCircle = Menu.Item("Drawing_q").GetValue<Circle>();
             Circle wCircle = Menu.Item("Drawing_w").GetValue<Circle>();
             Circle eCircle = Menu.Item("Drawing_e").GetValue<Circle>();
+            Circle rCircle = Menu.Item("Drawing_r").GetValue<Circle>();
 
             if (qCircle.Active)
                 Utility.DrawCircle(Player.Position, Spells["Q"].Range, qCircle.Color);
             if (wCircle.Active)
                 Utility.DrawCircle(Player.Position, Spells["W"].Range, wCircle.Color);
             if (eCircle.Active)
-                Utility.DrawCircle(Player.Position, Spells["E"].Range, eCircle.Color);
+                Utility.DrawCircle(Player.Position, Spells["E"].Range, eCircle.Color); 
+            if (rCircle.Active)
+                Utility.DrawCircle(Player.Position, Spells["R"].Range, rCircle.Color);
 
             Utility.HpBarDamageIndicator.DamageToUnit = ComboDamage;
             Utility.HpBarDamageIndicator.Enabled = Menu.Item("Drawing_damage").GetValue<bool>();
@@ -114,7 +121,7 @@ namespace EasyAhri
                 damage += (float)DamageLib.getDmg(hero, DamageLib.SpellType.W);
             if (Spells["E"].IsReady())
                 damage += (float)DamageLib.getDmg(hero, DamageLib.SpellType.E);
-            if (Player.Spellbook.GetSpell(SpellSlot.R).State == SpellState.Ready)
+            if (Spells["R"].IsReady())
                 damage += (float)DamageLib.getDmg(hero, DamageLib.SpellType.R);
 
             return damage * (DFG.IsReady() ? 1.2f : 1f);
