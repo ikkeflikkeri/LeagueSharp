@@ -11,9 +11,11 @@ namespace EasyAhri
 {
     class Ahri : Champion
     {
+        public static Items.Item DFG;
+
         public Ahri() : base("Ahri")
         {
-
+            DFG = Utility.Map.GetMap() == Utility.Map.MapType.TwistedTreeline ? new Items.Item(3188, 750) : new Items.Item(3128, 750);
         }
 
         protected override void InitializeSkins(ref SkinManager Skins)
@@ -27,8 +29,8 @@ namespace EasyAhri
 
         protected override void InitializeSpells()
         {
-            Spell Q = new Spell(SpellSlot.Q, 880);
-            Q.SetSkillshot(0.25f, 100f, 1100f, false, SkillshotType.SkillshotLine);
+            Spell Q = new Spell(SpellSlot.Q, 900f);
+            Q.SetSkillshot(0.25f, 100f, 1200f, false, SkillshotType.SkillshotLine);
 
             Spell W = new Spell(SpellSlot.W, 800);
 
@@ -104,6 +106,8 @@ namespace EasyAhri
         {
             float damage = 0;
 
+            if(DFG.IsReady())
+                damage += (float)DamageLib.getDmg(hero, DamageLib.SpellType.DFG) / 1.2f;
             if (Spells["Q"].IsReady())
                 damage += (float)DamageLib.getDmg(hero, DamageLib.SpellType.Q);
             if (Spells["W"].IsReady())
@@ -113,7 +117,7 @@ namespace EasyAhri
             if (Player.Spellbook.GetSpell(SpellSlot.R).State == SpellState.Ready)
                 damage += (float)DamageLib.getDmg(hero, DamageLib.SpellType.R);
 
-            return damage;
+            return damage * (DFG.IsReady() ? 1.2f : 1f);
         }
     }
 }
