@@ -103,7 +103,7 @@ namespace EasyEzreal
         {
             if (!Spells["R"].IsReady())
                 return 0;
-            return (float)DamageLib.getDmg(hero, DamageLib.SpellType.R) * 0.8f;
+            return (float)DamageLib.getDmg(hero, DamageLib.SpellType.R) * 0.7f;
         }
 
         void CastR()
