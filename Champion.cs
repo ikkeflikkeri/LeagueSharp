@@ -2,6 +2,7 @@
 using LeagueSharp.Common;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -53,6 +54,11 @@ abstract class Champion
 
 		CreateMenu();
 
+        Menu.AddSubMenu(new Menu("Feedback", "Feedback"));
+        Menu.SubMenu("Feedback").AddItem(new MenuItem("feedback_exp", "This wil open a website"));
+        Menu.SubMenu("Feedback").AddItem(new MenuItem("feedback_exp1", "with a feedback form."));
+        Menu.SubMenu("Feedback").AddItem(new MenuItem("feedback_btn", "Turn this on").SetValue(false));
+
 		Menu.AddItem(new MenuItem("Recall_block", "Block skills while recalling").SetValue(true));
 
 		Menu.AddToMainMenu();
@@ -65,8 +71,8 @@ abstract class Champion
 		{
 			wc.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";
 			string amount = wc.UploadString("http://niels-wouters.be/LeagueSharp/playcount.php", "assembly=" + ChampionName);
-			Game.PrintChat("Easy" + ChampionName + " is loaded! This assembly has been played in " + amount + " games.");
-		}
+            Game.PrintChat("Easy" + ChampionName + " is loaded! This assembly has been played in " + amount + " games. If you have any problems or suggestions for this assembly, you can contact me in the feedback menu.");
+        }
 	}
 
 	void Game_OnGameEnd(GameEndEventArgs args)
@@ -91,6 +97,13 @@ abstract class Champion
 		lastTick = Environment.TickCount;
 
         SkinManager.Update();
+
+        if (Menu.Item("feedback_btn").GetValue<bool>())
+        {
+            Menu.Item("feedback_btn").SetValue(false);
+            Process.Start("http://niels-wouters.be/LeagueSharp/feedback.php?name=Easy" + ChampionName);
+            Game.PrintChat("Check your webbrowser, the website should be loading!");
+        }
 
 		Update();
 
