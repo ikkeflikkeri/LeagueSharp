@@ -62,7 +62,7 @@ namespace EasyEzreal
             Menu.SubMenu("Auto").AddItem(new MenuItem("Auto_r", "Use R").SetValue(true));
             Menu.SubMenu("Auto").AddItem(new MenuItem("Auto_minrange", "Min R range").SetValue(new Slider(1050, 0, 1500)));
             Menu.SubMenu("Auto").AddItem(new MenuItem("Auto_maxrange", "Max R range").SetValue(new Slider(3000, 1500, 5000)));
-            Menu.SubMenu("Auto").AddItem(new MenuItem("Auto_mana", "Only if % mana").SetValue(new Slider(25)));
+            Menu.SubMenu("Auto").AddItem(new MenuItem("Auto_manaE", "Keep mana for E").SetValue(true));
 
             Menu.AddSubMenu(new Menu("Drawing", "Drawing"));
             Menu.SubMenu("Drawing").AddItem(new MenuItem("Drawing_q", "Q Range").SetValue(new Circle(true, Color.FromArgb(100, 0, 255, 0))));
@@ -82,11 +82,11 @@ namespace EasyEzreal
         }
         protected override void Auto()
         {
-            if ((Player.Mana / Player.MaxMana) * 100 >= Menu.Item("Auto_mana").GetValue<Slider>().Value)
-            {
-                if (Menu.Item("Auto_q").GetValue<bool>()) Cast("Q", SimpleTs.DamageType.Physical);
-                if (Menu.Item("Auto_w").GetValue<bool>()) Cast("W", SimpleTs.DamageType.Physical);
-            }
+            if (Menu.Item("Auto_manaE").GetValue<bool>() && Player.Spellbook.GetSpell(SpellSlot.E).Level >= 1 && Player.Mana < Player.Spellbook.GetSpell(SpellSlot.E).ManaCost)
+                return;
+
+            if (Menu.Item("Auto_q").GetValue<bool>() && !(Menu.Item("Auto_manaE").GetValue<bool>() && Player.Spellbook.GetSpell(SpellSlot.E).Level >= 1 && Player.Mana < Player.Spellbook.GetSpell(SpellSlot.E).ManaCost + Player.Spellbook.GetSpell(SpellSlot.Q).ManaCost)) Cast("Q", SimpleTs.DamageType.Physical);
+            if (Menu.Item("Auto_w").GetValue<bool>() && !(Menu.Item("Auto_manaE").GetValue<bool>() && Player.Spellbook.GetSpell(SpellSlot.E).Level >= 1 && Player.Mana < Player.Spellbook.GetSpell(SpellSlot.E).ManaCost + Player.Spellbook.GetSpell(SpellSlot.W).ManaCost)) Cast("W", SimpleTs.DamageType.Physical);
             if (Menu.Item("Auto_r").GetValue<bool>()) CastR();
         }
         protected override void Drawing()
