@@ -123,9 +123,7 @@ namespace EasyRyze
         {
             if (Menu.Item("Auto_wgapcloser").GetValue<bool>())
             {
-                if (distance(Player.Position, gapcloser.Start) < Spells["W"].Range)
-                    Spells["W"].CastOnUnit(gapcloser.Sender);
-                if (distance(Player.Position, gapcloser.End) < Spells["W"].Range)
+                if (Player.Distance(gapcloser.Sender) <= Spells["W"].Range)
                     Spells["W"].CastOnUnit(gapcloser.Sender);
             }
         }
@@ -161,15 +159,6 @@ namespace EasyRyze
             vec.X = player.Position.X - enemy.Position.X;
             vec.Y = player.Position.Y - enemy.Position.Y;
             vec.Z = player.Position.Z - enemy.Position.Z;
-
-            return (float)Math.Sqrt(vec.X * vec.X + vec.Y * vec.Y + vec.Z * vec.Z);
-        }
-        private float distance(SharpDX.Vector3 vec1, SharpDX.Vector3 vec2)
-        {
-            SharpDX.Vector3 vec = new SharpDX.Vector3();
-            vec.X = vec1.X - vec2.X;
-            vec.Y = vec1.Y - vec2.Y;
-            vec.Z = vec1.Z - vec2.Z;
 
             return (float)Math.Sqrt(vec.X * vec.X + vec.Y * vec.Y + vec.Z * vec.Z);
         }
