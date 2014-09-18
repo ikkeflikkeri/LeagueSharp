@@ -43,6 +43,7 @@ namespace EasyRyze
             Menu.AddSubMenu(new Menu("Combo", "Combo"));
             Menu.SubMenu("Combo").AddItem(new MenuItem("Combo_q", "Use Q").SetValue(true));
             Menu.SubMenu("Combo").AddItem(new MenuItem("Combo_w", "Use W").SetValue(true));
+            Menu.SubMenu("Combo").AddItem(new MenuItem("Combo_wfirst", "Use W first in combo").SetValue(true));
             Menu.SubMenu("Combo").AddItem(new MenuItem("Combo_e", "Use E").SetValue(true));
             Menu.SubMenu("Combo").AddItem(new MenuItem("Combo_r", "Use R if killable").SetValue(true));
 
@@ -68,6 +69,16 @@ namespace EasyRyze
         protected override void Combo()
         {
             if (Menu.Item("Combo_r").GetValue<bool>()) CastR();
+
+            if (Menu.Item("Combo_w").GetValue<bool>() && Menu.Item("Combo_wfirst").GetValue<bool>())
+            {
+                if (Spells["W"].IsReady())
+                {
+                    Obj_AI_Hero target = SimpleTs.GetTarget(Spells["Q"].Range, SimpleTs.DamageType.Magical);
+                    if (target.Distance(Player) > Spells["W"].Range) return;
+                }
+            }
+
             if (Menu.Item("Combo_w").GetValue<bool>()) Cast("W", SimpleTs.DamageType.Magical, false);
             if (Menu.Item("Combo_q").GetValue<bool>()) Cast("Q", SimpleTs.DamageType.Magical, false);
             if (Menu.Item("Combo_e").GetValue<bool>()) Cast("E", SimpleTs.DamageType.Magical, false);
@@ -83,8 +94,6 @@ namespace EasyRyze
             if (Menu.Item("Auto_w").GetValue<bool>()) Cast("W", SimpleTs.DamageType.Magical, false);
             if (Menu.Item("Auto_q").GetValue<bool>()) Cast("Q", SimpleTs.DamageType.Magical, false);
             if (Menu.Item("Auto_e").GetValue<bool>()) Cast("E", SimpleTs.DamageType.Magical, false);
-            if (Menu.Item("Auto_r").GetValue<Slider>().Value <= Utility.CountEnemysInRange((int)Spells["R"].Range, Player))
-                Spells["R"].Cast();
         }
         protected override void Drawing()
         {
@@ -105,6 +114,9 @@ namespace EasyRyze
         protected override void Update()
         {
             Orbwalker.SetAttacks(!(Orbwalker.ActiveMode == Orbwalking.OrbwalkingMode.Combo && (Spells["Q"].IsReady() || Spells["W"].IsReady() || Spells["E"].IsReady())));
+
+            if (Menu.Item("Auto_r").GetValue<Slider>().Value <= Utility.CountEnemysInRange((int)Spells["R"].Range, Player))
+                Spells["R"].Cast();
         }
 
         void AntiGapcloser_OnEnemyGapcloser(ActiveGapcloser gapcloser)

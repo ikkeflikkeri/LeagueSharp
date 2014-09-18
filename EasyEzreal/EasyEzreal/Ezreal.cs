@@ -77,14 +77,13 @@ namespace EasyEzreal
         }
         protected override void Harass()
         {
-            if (Menu.Item("Harass_q").GetValue<bool>()) Cast("Q", SimpleTs.DamageType.Physical);
-            if (Menu.Item("Harass_w").GetValue<bool>()) Cast("W", SimpleTs.DamageType.Physical);
+            if (Menu.Item("Harass_q").GetValue<bool>() && !(Menu.Item("Auto_manaE").GetValue<bool>() && Player.Spellbook.GetSpell(SpellSlot.E).Level >= 1 && Player.Mana < Player.Spellbook.GetSpell(SpellSlot.E).ManaCost + Player.Spellbook.GetSpell(SpellSlot.Q).ManaCost)) Cast("Q", SimpleTs.DamageType.Physical);
+            if (Menu.Item("Harass_w").GetValue<bool>() && !(Menu.Item("Auto_manaE").GetValue<bool>() && Player.Spellbook.GetSpell(SpellSlot.E).Level >= 1 && Player.Mana < Player.Spellbook.GetSpell(SpellSlot.E).ManaCost + Player.Spellbook.GetSpell(SpellSlot.W).ManaCost)) Cast("W", SimpleTs.DamageType.Physical);
         }
         protected override void Auto()
         {
             if (Menu.Item("Auto_q").GetValue<bool>() && !(Menu.Item("Auto_manaE").GetValue<bool>() && Player.Spellbook.GetSpell(SpellSlot.E).Level >= 1 && Player.Mana < Player.Spellbook.GetSpell(SpellSlot.E).ManaCost + Player.Spellbook.GetSpell(SpellSlot.Q).ManaCost)) Cast("Q", SimpleTs.DamageType.Physical);
             if (Menu.Item("Auto_w").GetValue<bool>() && !(Menu.Item("Auto_manaE").GetValue<bool>() && Player.Spellbook.GetSpell(SpellSlot.E).Level >= 1 && Player.Mana < Player.Spellbook.GetSpell(SpellSlot.E).ManaCost + Player.Spellbook.GetSpell(SpellSlot.W).ManaCost)) Cast("W", SimpleTs.DamageType.Physical);
-            if (Menu.Item("Auto_r").GetValue<bool>()) CastR();
         }
         protected override void Drawing()
         {
@@ -99,6 +98,10 @@ namespace EasyEzreal
             Utility.HpBarDamageIndicator.DamageToUnit = UltimateDamage;
             Utility.HpBarDamageIndicator.Enabled = Menu.Item("Drawing_rdamage").GetValue<bool>();
         }
+        protected override void Update()
+        {
+            if (Menu.Item("Auto_r").GetValue<bool>()) CastR();
+        } 
 
         float UltimateDamage(Obj_AI_Hero hero)
         {
