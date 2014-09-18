@@ -152,15 +152,5 @@ namespace EasyRyze
 
             Spells["R"].Cast();
         }
-
-        private float distance(Obj_AI_Hero player, Obj_AI_Hero enemy)
-        {
-            SharpDX.Vector3 vec = new SharpDX.Vector3();
-            vec.X = player.Position.X - enemy.Position.X;
-            vec.Y = player.Position.Y - enemy.Position.Y;
-            vec.Z = player.Position.Z - enemy.Position.Z;
-
-            return (float)Math.Sqrt(vec.X * vec.X + vec.Y * vec.Y + vec.Z * vec.Z);
-        }
     }
 }
