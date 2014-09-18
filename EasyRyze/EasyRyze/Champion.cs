@@ -10,91 +10,91 @@ using System.Threading.Tasks;
 
 abstract class Champion
 {
-	public Obj_AI_Hero Player;
-	public Menu Menu;
-	public Orbwalking.Orbwalker Orbwalker;
-	public Dictionary<string, Spell> Spells = new Dictionary<string, Spell>();
+    public Obj_AI_Hero Player;
+    public Menu Menu;
+    public Orbwalking.Orbwalker Orbwalker;
+    public Dictionary<string, Spell> Spells = new Dictionary<string, Spell>();
 
-	private int tick = 1000 / 20;
-	private int lastTick = Environment.TickCount;
-	private string ChampionName;
+    private int tick = 1000 / 20;
+    private int lastTick = Environment.TickCount;
+    private string ChampionName;
     private bool isDebugging;
 
     private SkinManager SkinManager;
 
-	public Champion(string name, bool debug = false)
-	{
-		ChampionName = name;
+    public Champion(string name, bool debug = false)
+    {
+        ChampionName = name;
         isDebugging = debug;
-       
-		CustomEvents.Game.OnGameLoad += Game_OnGameLoad;
-	}
 
-	void Game_OnGameLoad(EventArgs args)
-	{
-		Player = ObjectManager.Player;
+        CustomEvents.Game.OnGameLoad += Game_OnGameLoad;
+    }
 
-		if (ChampionName.ToLower() != Player.ChampionName.ToLower())
-			return;
+    void Game_OnGameLoad(EventArgs args)
+    {
+        Player = ObjectManager.Player;
+
+        if (ChampionName.ToLower() != Player.ChampionName.ToLower())
+            return;
 
         SkinManager = new SkinManager();
 
-		InitializeSpells();
-		InitializeSkins(ref SkinManager);
+        InitializeSpells();
+        InitializeSkins(ref SkinManager);
 
-		Menu = new Menu("Easy" + ChampionName, "Easy" + ChampionName, true);
+        Menu = new Menu("Easy" + ChampionName, "Easy" + ChampionName, true);
 
         SkinManager.AddToMenu(ref Menu);
 
-		Menu.AddSubMenu(new Menu("Target Selector", "Target Selector"));
-		SimpleTs.AddToMenu(Menu.SubMenu("Target Selector"));
+        Menu.AddSubMenu(new Menu("Target Selector", "Target Selector"));
+        SimpleTs.AddToMenu(Menu.SubMenu("Target Selector"));
 
-		Menu.AddSubMenu(new Menu("Orbwalker", "Orbwalker"));
-		Orbwalker = new Orbwalking.Orbwalker(Menu.SubMenu("Orbwalker"));
+        Menu.AddSubMenu(new Menu("Orbwalker", "Orbwalker"));
+        Orbwalker = new Orbwalking.Orbwalker(Menu.SubMenu("Orbwalker"));
 
-		CreateMenu();
+        CreateMenu();
 
         Menu.AddSubMenu(new Menu("Feedback", "Feedback"));
         Menu.SubMenu("Feedback").AddItem(new MenuItem("feedback_exp", "This wil open a website"));
         Menu.SubMenu("Feedback").AddItem(new MenuItem("feedback_exp1", "with a feedback form."));
         Menu.SubMenu("Feedback").AddItem(new MenuItem("feedback_btn", "Turn this on").SetValue(false));
 
-		Menu.AddItem(new MenuItem("Recall_block", "Block skills while recalling").SetValue(true));
+        Menu.AddItem(new MenuItem("Recall_block", "Block skills while recalling").SetValue(true));
 
-		Menu.AddToMainMenu();
+        Menu.AddToMainMenu();
 
-		Game.OnGameUpdate += Game_OnGameUpdate;
-		Game.OnGameEnd += Game_OnGameEnd;
-		LeagueSharp.Drawing.OnDraw += Drawing_OnDraw;
+        Game.OnGameUpdate += Game_OnGameUpdate;
+        Game.OnGameEnd += Game_OnGameEnd;
+        LeagueSharp.Drawing.OnDraw += Drawing_OnDraw;
 
-		using (WebClient wc = new WebClient())
-		{
-			wc.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";
-			string amount = wc.UploadString("http://niels-wouters.be/LeagueSharp/playcount.php", "assembly=" + ChampionName);
+        using (WebClient wc = new WebClient())
+        {
+            wc.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";
+            string amount = wc.UploadString("http://niels-wouters.be/LeagueSharp/playcount.php", "assembly=" + ChampionName);
             Game.PrintChat("Easy" + ChampionName + " is loaded! This assembly has been played in " + amount + " games. If you have any problems or suggestions for this assembly, you can contact me in the feedback menu.");
         }
-	}
+    }
 
-	void Game_OnGameEnd(GameEndEventArgs args)
-	{
-		using (WebClient wc = new WebClient())
-		{
-			wc.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";
-			wc.UploadString("http://niels-wouters.be/LeagueSharp/stats.php", "assembly=" + ChampionName);
-		}
-	}
+    void Game_OnGameEnd(GameEndEventArgs args)
+    {
+        using (WebClient wc = new WebClient())
+        {
+            wc.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";
+            wc.UploadString("http://niels-wouters.be/LeagueSharp/stats.php", "assembly=" + ChampionName);
+        }
+    }
 
-	void Drawing_OnDraw(EventArgs args)
-	{
-		Drawing();
+    void Drawing_OnDraw(EventArgs args)
+    {
+        Drawing();
 
         if (isDebugging) DrawBuffs();
-	}
+    }
 
-	void Game_OnGameUpdate(EventArgs args)
-	{
-		if (Environment.TickCount < lastTick + tick) return;
-		lastTick = Environment.TickCount;
+    void Game_OnGameUpdate(EventArgs args)
+    {
+        if (Environment.TickCount < lastTick + tick) return;
+        lastTick = Environment.TickCount;
 
         SkinManager.Update();
 
@@ -105,18 +105,24 @@ abstract class Champion
             Game.PrintChat("Check your webbrowser, the website should be loading!");
         }
 
-		Update();
+        Update();
 
-		if ((Menu.Item("Recall_block").GetValue<bool>() && Player.HasBuff("Recall")) || Player.IsWindingUp)
-			return;
+        if ((Menu.Item("Recall_block").GetValue<bool>() && Player.HasBuff("Recall")) || Player.IsWindingUp)
+            return;
 
-		if (Orbwalker.ActiveMode == Orbwalking.OrbwalkingMode.Combo) Combo();
-
-		if (Orbwalker.ActiveMode == Orbwalking.OrbwalkingMode.Mixed) Harass();
-
-		Auto();
-
-	}
+        switch (Orbwalker.ActiveMode)
+        {
+            case Orbwalking.OrbwalkingMode.Combo:
+                Combo();
+                break;
+            case Orbwalking.OrbwalkingMode.Mixed:
+                Harass();
+                break;
+            default:
+                Auto();
+                break;
+        }
+    }
 
     protected void Cast(string spell, SimpleTs.DamageType damageType, bool packet = true, bool aoe = false)
     {
@@ -144,7 +150,7 @@ abstract class Champion
         if (target == null || !target.IsValidTarget(Spells[spell].ChargedMaxRange))
             return;
 
-        if(!Spells[spell].IsCharging)
+        if (!Spells[spell].IsCharging)
             Spells[spell].StartCharging();
         else
         {
@@ -172,38 +178,38 @@ abstract class Champion
         Spells[spell].CastOnUnit(target, packet);
     }
 
-	protected virtual void InitializeSkins(ref SkinManager Skins)
-	{
+    protected virtual void InitializeSkins(ref SkinManager Skins)
+    {
 
-	}
+    }
     protected virtual void InitializeSpells()
-	{
+    {
 
-	}
-	protected virtual void CreateMenu()
-	{
+    }
+    protected virtual void CreateMenu()
+    {
 
-	}
-	protected virtual void Combo()
-	{
+    }
+    protected virtual void Combo()
+    {
 
-	}
-	protected virtual void Harass()
-	{
+    }
+    protected virtual void Harass()
+    {
 
-	}
-	protected virtual void Auto()
-	{
+    }
+    protected virtual void Auto()
+    {
 
-	}
-	protected virtual void Drawing()
-	{
+    }
+    protected virtual void Drawing()
+    {
 
-	}
-	protected virtual void Update()
-	{
+    }
+    protected virtual void Update()
+    {
 
-	}
+    }
 
     protected void DrawBuffs()
     {
