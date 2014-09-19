@@ -41,9 +41,9 @@ namespace EasyRyze
         protected override void CreateMenu()
         {
             Menu.AddSubMenu(new Menu("Combo", "Combo"));
+            Menu.SubMenu("Combo").AddItem(new MenuItem("Combo_smart", "Use smart combo").SetValue(true));
             Menu.SubMenu("Combo").AddItem(new MenuItem("Combo_q", "Use Q").SetValue(true));
             Menu.SubMenu("Combo").AddItem(new MenuItem("Combo_w", "Use W").SetValue(true));
-            Menu.SubMenu("Combo").AddItem(new MenuItem("Combo_wfirst", "Use W first in combo").SetValue(true));
             Menu.SubMenu("Combo").AddItem(new MenuItem("Combo_e", "Use E").SetValue(true));
             Menu.SubMenu("Combo").AddItem(new MenuItem("Combo_r", "Use R if killable").SetValue(true));
 
@@ -70,12 +70,13 @@ namespace EasyRyze
         {
             if (Menu.Item("Combo_r").GetValue<bool>()) CastR();
 
-            if (Menu.Item("Combo_w").GetValue<bool>() && Menu.Item("Combo_wfirst").GetValue<bool>())
+            if (Menu.Item("Combo_w").GetValue<bool>() && Menu.Item("Combo_smart").GetValue<bool>())
             {
                 if (Spells["W"].IsReady())
                 {
                     Obj_AI_Hero target = SimpleTs.GetTarget(Spells["Q"].Range, SimpleTs.DamageType.Magical);
-                    if (target.Distance(Player) > Spells["W"].Range) return;
+                    if (target.Distance(Player) < Spells["W"].Range - 100) Cast("Q", SimpleTs.DamageType.Magical, false);
+                    else if (target.Distance(Player) > Spells["W"].Range) return;
                 }
             }
 
