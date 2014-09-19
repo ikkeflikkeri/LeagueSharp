@@ -20,9 +20,12 @@ namespace EasyRyze
         {
             Skins.Add("Ryze");
             Skins.Add("Human Ryze");
-            Skins.Add("Uncle Ryze");
             Skins.Add("Tribal Ryze");
+            Skins.Add("Uncle Ryze");
             Skins.Add("Triumphant Ryze");
+            Skins.Add("Professor Ryze");
+            Skins.Add("Zombie Ryze");
+            Skins.Add("Dark Crystal Ryze");
             Skins.Add("Pirate Ryze");
         }
         protected override void InitializeSpells()
