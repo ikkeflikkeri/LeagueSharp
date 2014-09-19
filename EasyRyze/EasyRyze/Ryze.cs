@@ -46,11 +46,13 @@ namespace EasyRyze
             Menu.SubMenu("Combo").AddItem(new MenuItem("Combo_w", "Use W").SetValue(true));
             Menu.SubMenu("Combo").AddItem(new MenuItem("Combo_e", "Use E").SetValue(true));
             Menu.SubMenu("Combo").AddItem(new MenuItem("Combo_r", "Use R if killable").SetValue(true));
+            Menu.SubMenu("Combo").AddItem(new MenuItem("Combo_packet", "Use packet cast").SetValue(true));
 
             Menu.AddSubMenu(new Menu("Harass", "Harass"));
             Menu.SubMenu("Harass").AddItem(new MenuItem("Harass_q", "Use Q").SetValue(true));
             Menu.SubMenu("Harass").AddItem(new MenuItem("Harass_w", "Use W").SetValue(false));
             Menu.SubMenu("Harass").AddItem(new MenuItem("Harass_e", "Use E").SetValue(false));
+            Menu.SubMenu("Harass").AddItem(new MenuItem("Harass_packet", "Use packet cast").SetValue(false));
 
             Menu.AddSubMenu(new Menu("Auto", "Auto"));
             Menu.SubMenu("Auto").AddItem(new MenuItem("Auto_q", "Use Q").SetValue(true));
@@ -58,6 +60,7 @@ namespace EasyRyze
             Menu.SubMenu("Auto").AddItem(new MenuItem("Auto_wgapcloser", "Use W on gapclosers").SetValue(true));
             Menu.SubMenu("Auto").AddItem(new MenuItem("Auto_e", "Use E").SetValue(false));
             Menu.SubMenu("Auto").AddItem(new MenuItem("Auto_r", "Use R if X enemies around").SetValue(new Slider(2, 1, 5)));
+            Menu.SubMenu("Auto").AddItem(new MenuItem("Auto_packet", "Use packet cast").SetValue(true));
 
             Menu.AddSubMenu(new Menu("Drawing", "Drawing"));
             Menu.SubMenu("Drawing").AddItem(new MenuItem("Drawing_q", "Use Q").SetValue(new Circle(true, Color.FromArgb(100, 0, 255, 0))));
@@ -75,26 +78,33 @@ namespace EasyRyze
                 if (Spells["W"].IsReady())
                 {
                     Obj_AI_Hero target = SimpleTs.GetTarget(Spells["Q"].Range, SimpleTs.DamageType.Magical);
-                    if (target.Distance(Player) < Spells["W"].Range - 100) Cast("Q", SimpleTs.DamageType.Magical, false);
-                    else if (target.Distance(Player) > Spells["W"].Range) return;
+                    if (target.Distance(Player) < 200) Cast("E", SimpleTs.DamageType.Magical, Menu.Item("Combo_packet").GetValue<bool>());
+                    else if (target.Distance(Player) < Spells["W"].Range - 100) Cast("Q", SimpleTs.DamageType.Magical, Menu.Item("Combo_packet").GetValue<bool>());
+                    else if (target.Distance(Player) > Spells["W"].Range)
+                    {
+                        if (DamageLib.getDmg(target, DamageLib.SpellType.Q) >= target.Health)
+                            Cast("Q", SimpleTs.DamageType.Magical, Menu.Item("Combo_packet").GetValue<bool>());
+                        else
+                            return;
+                    }
                 }
             }
 
-            if (Menu.Item("Combo_w").GetValue<bool>()) Cast("W", SimpleTs.DamageType.Magical, false);
-            if (Menu.Item("Combo_q").GetValue<bool>()) Cast("Q", SimpleTs.DamageType.Magical, false);
-            if (Menu.Item("Combo_e").GetValue<bool>()) Cast("E", SimpleTs.DamageType.Magical, false);
+            if (Menu.Item("Combo_w").GetValue<bool>()) Cast("W", SimpleTs.DamageType.Magical, Menu.Item("Combo_packet").GetValue<bool>());
+            if (Menu.Item("Combo_q").GetValue<bool>()) Cast("Q", SimpleTs.DamageType.Magical, Menu.Item("Combo_packet").GetValue<bool>());
+            if (Menu.Item("Combo_e").GetValue<bool>()) Cast("E", SimpleTs.DamageType.Magical, Menu.Item("Combo_packet").GetValue<bool>());
         }
         protected override void Harass()
         {
-            if (Menu.Item("Harass_w").GetValue<bool>()) Cast("W", SimpleTs.DamageType.Magical, false);
-            if (Menu.Item("Harass_q").GetValue<bool>()) Cast("Q", SimpleTs.DamageType.Magical, false);
-            if (Menu.Item("Harass_e").GetValue<bool>()) Cast("E", SimpleTs.DamageType.Magical, false);
+            if (Menu.Item("Harass_w").GetValue<bool>()) Cast("W", SimpleTs.DamageType.Magical, Menu.Item("Harass_packet").GetValue<bool>());
+            if (Menu.Item("Harass_q").GetValue<bool>()) Cast("Q", SimpleTs.DamageType.Magical, Menu.Item("Harass_packet").GetValue<bool>());
+            if (Menu.Item("Harass_e").GetValue<bool>()) Cast("E", SimpleTs.DamageType.Magical, Menu.Item("Harass_packet").GetValue<bool>());
         }
         protected override void Auto()
         {
-            if (Menu.Item("Auto_w").GetValue<bool>()) Cast("W", SimpleTs.DamageType.Magical, false);
-            if (Menu.Item("Auto_q").GetValue<bool>()) Cast("Q", SimpleTs.DamageType.Magical, false);
-            if (Menu.Item("Auto_e").GetValue<bool>()) Cast("E", SimpleTs.DamageType.Magical, false);
+            if (Menu.Item("Auto_w").GetValue<bool>()) Cast("W", SimpleTs.DamageType.Magical, Menu.Item("Auto_packet").GetValue<bool>());
+            if (Menu.Item("Auto_q").GetValue<bool>()) Cast("Q", SimpleTs.DamageType.Magical, Menu.Item("Auto_packet").GetValue<bool>());
+            if (Menu.Item("Auto_e").GetValue<bool>()) Cast("E", SimpleTs.DamageType.Magical, Menu.Item("Auto_packet").GetValue<bool>());
         }
         protected override void Drawing()
         {
@@ -133,13 +143,11 @@ namespace EasyRyze
         {
             float damage = 0;
             if (Spells["Q"].IsReady())
-                damage += (float)DamageLib.getDmg(hero, DamageLib.SpellType.Q);
-            if (Spells["Q"].IsReady())
-                damage += (float)DamageLib.getDmg(hero, DamageLib.SpellType.Q);
+                damage += (float)DamageLib.getDmg(hero, DamageLib.SpellType.Q) * 1.3f;
             if (Spells["W"].IsReady())
-                damage += (float)DamageLib.getDmg(hero, DamageLib.SpellType.W);
+                damage += (float)DamageLib.getDmg(hero, DamageLib.SpellType.W) * 1.3f;
             if (Spells["E"].IsReady())
-                damage += (float)DamageLib.getDmg(hero, DamageLib.SpellType.E);
+                damage += (float)DamageLib.getDmg(hero, DamageLib.SpellType.E) * 1.3f;
             return damage;
         }
 
