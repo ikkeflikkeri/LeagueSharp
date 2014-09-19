@@ -241,9 +241,9 @@ class SkinManager
         if (Skins.Count > 0)
         {
             Menu.AddSubMenu(new Menu("Skin Changer", "Skin Changer"));
-            Menu.SubMenu("Skin Changer").AddItem(new MenuItem("Skin_enabled", "Enable skin changer").SetValue(false));
-            Menu.SubMenu("Skin Changer").AddItem(new MenuItem("Skin_select", "Skins").SetValue(new StringList(Skins.ToArray())));
-            SelectedSkin = Menu.Item("Skin_select").GetValue<StringList>().SelectedIndex;
+            Menu.SubMenu("Skin Changer").AddItem(new MenuItem("Skin_" + ObjectManager.Player.ChampionName + "_enabled", "Enable skin changer").SetValue(false));
+            Menu.SubMenu("Skin Changer").AddItem(new MenuItem("Skin_" + ObjectManager.Player.ChampionName + "_select", "Skins").SetValue(new StringList(Skins.ToArray())));
+            SelectedSkin = Menu.Item("Skin_" + ObjectManager.Player.ChampionName + "_select").GetValue<StringList>().SelectedIndex;
         }
     }
 
@@ -254,9 +254,9 @@ class SkinManager
 
     public void Update()
     {
-        if (Menu.Item("Skin_enabled").GetValue<bool>())
+        if (Menu.Item("Skin_" + ObjectManager.Player.ChampionName + "_enabled").GetValue<bool>())
         {
-            int skin = Menu.Item("Skin_select").GetValue<StringList>().SelectedIndex;
+            int skin = Menu.Item("Skin_" + ObjectManager.Player.ChampionName + "_select").GetValue<StringList>().SelectedIndex;
             if (Initialize || skin != SelectedSkin)
             {
                 GenerateSkinPacket(skin);
