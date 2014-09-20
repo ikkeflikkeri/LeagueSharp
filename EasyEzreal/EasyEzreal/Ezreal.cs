@@ -108,7 +108,7 @@ namespace EasyEzreal
             if (!Spells["R"].IsReady())
                 return 0;
 
-            float reduction = 1f - ((Spells["R"].GetCollision(Player.Position.To2D(), new List<SharpDX.Vector2> { hero.Position.To2D() }).Count + 1) / 10f);
+            float reduction = 1f - ((Spells["R"].GetCollision(Player.Position.To2D(), new List<SharpDX.Vector2> { hero.Position.To2D() }).Count + 2) / 10f);
             if (reduction < 0.3f)
                 reduction = 0.3f;
 
