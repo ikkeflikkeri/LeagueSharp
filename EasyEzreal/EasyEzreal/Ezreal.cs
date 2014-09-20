@@ -107,7 +107,12 @@ namespace EasyEzreal
         {
             if (!Spells["R"].IsReady())
                 return 0;
-            return (float)DamageLib.getDmg(hero, DamageLib.SpellType.R) * 0.7f;
+
+            float reduction = 1f - (Spells["R"].GetCollision(Player.Position.To2D(), new List<SharpDX.Vector2> { hero.Position.To2D() }).Count / 10f);
+            if (reduction < 0.3f)
+                reduction = 0.3f;
+
+            return (float)DamageLib.getDmg(hero, DamageLib.SpellType.R) * reduction;
         }
 
         void CastR()
@@ -116,10 +121,10 @@ namespace EasyEzreal
 
             Obj_AI_Hero target = SimpleTs.GetTarget(Menu.Item("Auto_maxrange").GetValue<Slider>().Value, SimpleTs.DamageType.Magical);
             if (target == null || distance(target, Player) < Menu.Item("Auto_minrange").GetValue<Slider>().Value) return;
-            
-            float predictedHealth = HealthPrediction.GetHealthPrediction(target, (int)(Spells["R"].Delay + (target.Distance(Player) / Spells["R"].Speed) * 100));
 
-            if (UltimateDamage(target) < predictedHealth || 0 <= predictedHealth) return;
+            float predictedHealth = HealthPrediction.GetHealthPrediction(target, (int)(Spells["R"].Delay + (distance(target, Player) / Spells["R"].Speed) * 100));
+
+            if (UltimateDamage(target) < predictedHealth || predictedHealth <= 0) return;
 
             if (Spells["R"].GetPrediction(target).Hitchance >= HitChance.High)
                 Spells["R"].Cast(target, true);
