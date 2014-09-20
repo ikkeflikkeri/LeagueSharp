@@ -38,7 +38,7 @@ namespace EasyEzreal
             E.SetSkillshot(0.25f, 80f, 1600f, false, SkillshotType.SkillshotCircle);
 
             Spell R = new Spell(SpellSlot.R, float.MaxValue);
-            R.SetSkillshot(1f, 160f, 2000f, false, SkillshotType.SkillshotLine);
+            R.SetSkillshot(1.25f, 160f, 2000f, false, SkillshotType.SkillshotLine);
 
             Spells.Add("Q", Q);
             Spells.Add("W", W);
@@ -116,7 +116,8 @@ namespace EasyEzreal
 
             Obj_AI_Hero target = SimpleTs.GetTarget(Menu.Item("Auto_maxrange").GetValue<Slider>().Value, SimpleTs.DamageType.Magical);
             if (target == null) return;
-            if (UltimateDamage(target) < target.Health) return;
+            
+            if (UltimateDamage(target) < HealthPrediction.GetHealthPrediction(target, (int)(Spells["R"].Delay + (target.Distance(Player) / Spells["R"].Speed) * 100))) return;
 
             if (distance(target, Player) > Menu.Item("Auto_minrange").GetValue<Slider>().Value && Spells["R"].GetPrediction(target).Hitchance >= HitChance.High)
                 Spells["R"].Cast(target, true);
