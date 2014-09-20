@@ -3,6 +3,7 @@ using LeagueSharp.Common;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -43,6 +44,7 @@ abstract class Champion
         InitializeSkins(ref SkinManager);
 
         Menu = new Menu("Easy" + ChampionName, "Easy" + ChampionName, true);
+
         SkinManager.AddToMenu(ref Menu);
 
         Menu.AddSubMenu(new Menu("Target Selector", "Target Selector"));
@@ -109,16 +111,24 @@ abstract class Champion
         if ((Menu.Item("Recall_block").GetValue<bool>() && Player.HasBuff("Recall")) || Player.IsWindingUp)
             return;
 
+        bool minionBlock = false;
+
+        foreach (Obj_AI_Minion minion in MinionManager.GetMinions(Player.Position, Player.AttackRange, MinionTypes.All, MinionTeam.Enemy, MinionOrderTypes.None))
+        {
+            if (HealthPrediction.GetHealthPrediction(minion, 5000) <= DamageLib.getDmg(minion, DamageLib.SpellType.AD))
+                minionBlock = true;
+        }
+
         switch (Orbwalker.ActiveMode)
         {
             case Orbwalking.OrbwalkingMode.Combo:
                 Combo();
                 break;
             case Orbwalking.OrbwalkingMode.Mixed:
-                Harass();
+                if (!minionBlock) Harass();
                 break;
             default:
-                Auto();
+                if (!minionBlock) Auto();
                 break;
         }
     }
