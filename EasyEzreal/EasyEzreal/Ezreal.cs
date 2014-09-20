@@ -115,11 +115,13 @@ namespace EasyEzreal
             if (!Spells["R"].IsReady()) return;
 
             Obj_AI_Hero target = SimpleTs.GetTarget(Menu.Item("Auto_maxrange").GetValue<Slider>().Value, SimpleTs.DamageType.Magical);
-            if (target == null) return;
+            if (target == null || distance(target, Player) < Menu.Item("Auto_minrange").GetValue<Slider>().Value) return;
             
-            if (UltimateDamage(target) < HealthPrediction.GetHealthPrediction(target, (int)(Spells["R"].Delay + (target.Distance(Player) / Spells["R"].Speed) * 100))) return;
+            float predictedHealth = HealthPrediction.GetHealthPrediction(target, (int)(Spells["R"].Delay + (target.Distance(Player) / Spells["R"].Speed) * 100));
 
-            if (distance(target, Player) > Menu.Item("Auto_minrange").GetValue<Slider>().Value && Spells["R"].GetPrediction(target).Hitchance >= HitChance.High)
+            if (UltimateDamage(target) < predictedHealth || 0 <= predictedHealth) return;
+
+            if (Spells["R"].GetPrediction(target).Hitchance >= HitChance.High)
                 Spells["R"].Cast(target, true);
         }
 
