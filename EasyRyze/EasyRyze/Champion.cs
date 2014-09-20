@@ -43,7 +43,6 @@ abstract class Champion
         InitializeSkins(ref SkinManager);
 
         Menu = new Menu("Easy" + ChampionName, "Easy" + ChampionName, true);
-
         SkinManager.AddToMenu(ref Menu);
 
         Menu.AddSubMenu(new Menu("Target Selector", "Target Selector"));
