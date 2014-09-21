@@ -55,11 +55,6 @@ abstract class Champion
 
         CreateMenu();
 
-        Menu.AddSubMenu(new Menu("Feedback", "Feedback"));
-        Menu.SubMenu("Feedback").AddItem(new MenuItem("feedback_exp", "This wil open a website"));
-        Menu.SubMenu("Feedback").AddItem(new MenuItem("feedback_exp1", "with a feedback form."));
-        Menu.SubMenu("Feedback").AddItem(new MenuItem("feedback_btn", "Turn this on").SetValue(false));
-
         Menu.AddItem(new MenuItem("Recall_block", "Block skills while recalling").SetValue(true));
 
         Menu.AddToMainMenu();
@@ -72,7 +67,7 @@ abstract class Champion
         {
             wc.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";
             string amount = wc.UploadString("http://niels-wouters.be/LeagueSharp/playcount.php", "assembly=" + ChampionName);
-            Game.PrintChat("Easy" + ChampionName + " is loaded! This assembly has been played in " + amount + " games. If you have any problems or suggestions for this assembly, you can contact me in the feedback menu.");
+            Game.PrintChat("Easy" + ChampionName + " is loaded! This assembly has been played in " + amount + " games.");
         }
     }
 
