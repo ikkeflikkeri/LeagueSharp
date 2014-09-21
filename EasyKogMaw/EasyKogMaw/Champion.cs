@@ -94,13 +94,6 @@ abstract class Champion
 
         SkinManager.Update();
 
-        if (Menu.Item("feedback_btn").GetValue<bool>())
-        {
-            Menu.Item("feedback_btn").SetValue(false);
-            Process.Start("http://niels-wouters.be/LeagueSharp/feedback.php?name=Easy" + ChampionName);
-            Game.PrintChat("Check your webbrowser, the website should be loading!");
-        }
-
         Update();
 
         if ((Menu.Item("Recall_block").GetValue<bool>() && Player.HasBuff("Recall")) || Player.IsWindingUp)
