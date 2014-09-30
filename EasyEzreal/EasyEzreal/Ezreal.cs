@@ -112,7 +112,7 @@ namespace EasyEzreal
             if (reduction < 0.3f)
                 reduction = 0.3f;
 
-            return (float)DamageLib.getDmg(hero, DamageLib.SpellType.R) * reduction;
+            return (float)Damage.GetSpellDamage(Player, hero, SpellSlot.R) * reduction;
         }
 
         void CastR()

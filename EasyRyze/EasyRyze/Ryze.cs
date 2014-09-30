@@ -85,7 +85,7 @@ namespace EasyRyze
                     else if (target.Distance(Player) < Spells["W"].Range - 100) Cast("Q", SimpleTs.DamageType.Magical, Menu.Item("Combo_packet").GetValue<bool>());
                     else if (target.Distance(Player) > Spells["W"].Range)
                     {
-                        if (DamageLib.getDmg(target, DamageLib.SpellType.Q) >= target.Health)
+                        if (Damage.GetSpellDamage(Player, target, SpellSlot.Q) >= target.Health)
                             Cast("Q", SimpleTs.DamageType.Magical, Menu.Item("Combo_packet").GetValue<bool>());
                         else
                             return;
@@ -146,11 +146,11 @@ namespace EasyRyze
         {
             float damage = 0;
             if (Spells["Q"].IsReady())
-                damage += (float)DamageLib.getDmg(hero, DamageLib.SpellType.Q) * 1.3f;
+                damage += (float)Damage.GetSpellDamage(Player, hero, SpellSlot.Q) * 1.3f;
             if (Spells["W"].IsReady())
-                damage += (float)DamageLib.getDmg(hero, DamageLib.SpellType.W) * 1.3f;
+                damage += (float)Damage.GetSpellDamage(Player, hero, SpellSlot.W) * 1.3f;
             if (Spells["E"].IsReady())
-                damage += (float)DamageLib.getDmg(hero, DamageLib.SpellType.E) * 1.3f;
+                damage += (float)Damage.GetSpellDamage(Player, hero, SpellSlot.E) * 1.3f;
             return damage;
         }
 

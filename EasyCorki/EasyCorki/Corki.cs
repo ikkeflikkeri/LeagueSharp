@@ -113,10 +113,10 @@ namespace EasyCorki
             float damage = 0;
 
             if (Spells["Q"].IsReady())
-                damage += (float)DamageLib.getDmg(hero, DamageLib.SpellType.Q);
+                damage += (float)Damage.GetSpellDamage(Player, hero, SpellSlot.Q);
             if (Spells["R"].IsReady())
             {
-                float rDamage = (float)DamageLib.getDmg(hero, DamageLib.SpellType.R);
+                float rDamage = (float)Damage.GetSpellDamage(Player, hero, SpellSlot.R);
                 if(Player.HasBuff("CorkiMissileBarrageCounterBig"))
                     rDamage *= 1.5f;
                 damage += rDamage;
