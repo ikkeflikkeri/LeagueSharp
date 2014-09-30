@@ -114,15 +114,15 @@ namespace EasyAhri
             float damage = 0;
 
             if(DFG.IsReady())
-                damage += (float)DamageLib.getDmg(hero, DamageLib.SpellType.DFG) / 1.2f;
+                damage += (float)Damage.GetItemDamage(Player, hero, Damage.DamageItems.Dfg) / 1.2f;
             if (Spells["Q"].IsReady())
-                damage += (float)DamageLib.getDmg(hero, DamageLib.SpellType.Q);
+                damage += (float)Damage.GetSpellDamage(Player, hero, SpellSlot.Q);
             if (Spells["W"].IsReady())
-                damage += (float)DamageLib.getDmg(hero, DamageLib.SpellType.W);
+                damage += (float)Damage.GetSpellDamage(Player, hero, SpellSlot.W);
             if (Spells["E"].IsReady())
-                damage += (float)DamageLib.getDmg(hero, DamageLib.SpellType.E);
+                damage += (float)Damage.GetSpellDamage(Player, hero, SpellSlot.E);
             if (Spells["R"].IsReady())
-                damage += (float)DamageLib.getDmg(hero, DamageLib.SpellType.R);
+                damage += (float)Damage.GetSpellDamage(Player, hero, SpellSlot.R);
 
             return damage * (DFG.IsReady() ? 1.2f : 1f);
         }

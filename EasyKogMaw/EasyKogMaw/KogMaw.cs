@@ -140,7 +140,7 @@ namespace EasyKogMaw
             {
                 foreach (var enemy in ObjectManager.Get<Obj_AI_Hero>())
                 {
-                    if (enemy.IsEnemy && enemy.IsValid && enemy.Distance(Player) < Spells["R"].Range && HealthPrediction.GetHealthPrediction(enemy, (int)Spells["R"].Delay * 1000) < DamageLib.getDmg(enemy, DamageLib.SpellType.R) && enemy.IsValidTarget(Spells["R"].Range) && Spells["R"].GetPrediction(enemy).Hitchance >= HitChance.High)
+                    if (enemy.IsEnemy && enemy.IsValid && enemy.Distance(Player) < Spells["R"].Range && HealthPrediction.GetHealthPrediction(enemy, (int)Spells["R"].Delay * 1000) < Damage.GetSpellDamage(Player, enemy, SpellSlot.R) && enemy.IsValidTarget(Spells["R"].Range) && Spells["R"].GetPrediction(enemy).Hitchance >= HitChance.High)
                         Cast("R", SimpleTs.DamageType.Magical, true);
                 }
             }
@@ -177,7 +177,7 @@ namespace EasyKogMaw
 
         float UltimateDamage(Obj_AI_Hero hero)
         {
-            return (float)DamageLib.getDmg(hero, DamageLib.SpellType.R);
+            return (float)Damage.GetSpellDamage(Player, hero, SpellSlot.R);
         }
     }
 }

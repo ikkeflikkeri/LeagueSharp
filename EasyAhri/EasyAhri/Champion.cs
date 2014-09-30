@@ -103,7 +103,7 @@ abstract class Champion
 
         foreach (Obj_AI_Minion minion in MinionManager.GetMinions(Player.Position, Player.AttackRange, MinionTypes.All, MinionTeam.Enemy, MinionOrderTypes.None))
         {
-            if (HealthPrediction.GetHealthPrediction(minion, 5000) <= DamageLib.getDmg(minion, DamageLib.SpellType.AD))
+            if (HealthPrediction.GetHealthPrediction(minion, 5000) <= Damage.GetAutoAttackDamage(Player, minion, false))
                 minionBlock = true;
         }
 
