@@ -18,7 +18,7 @@ namespace EasyRyze
 
         public EasyRyze() : base("Ryze")
         {
-
+            AntiGapcloser.OnEnemyGapcloser += AntiGapcloser_OnEnemyGapcloser;
         }
 
         protected override void InitializeSkins(ref SkinManager Skins)
@@ -155,6 +155,15 @@ namespace EasyRyze
             if (ComboDamage(target) < target.Health) return;
 
             Spells.get("R").Cast();
+        }
+
+        void AntiGapcloser_OnEnemyGapcloser(ActiveGapcloser gapcloser)
+        {
+            if (Menu.Item("Auto_wgapcloser").GetValue<bool>())
+            {
+                if (Player.Distance(gapcloser.Sender) <= Spells.get("W").Range)
+                    Spells.get("W").CastOnUnit(gapcloser.Sender);
+            }
         }
     }
 }
