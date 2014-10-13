@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Release</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{35EBA232-4223-49F6-AE96-A115631D2429}</ProjectGuid>
+    <ProjectGuid>{CAF7E1F5-95D6-4E36-ADCD-B1DAD2B16A88}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>EasyKogMaw</RootNamespace>
@@ -13,6 +13,7 @@
     <FileAlignment>512</FileAlignment>
     <PreBuildEvent />
     <PostBuildEvent />
+    <OutputPath>bin\Release</OutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -35,13 +36,13 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="LeagueSharp">
-      <HintPath>..\..\..\..\..\..\League#\System\LeagueSharp.dll</HintPath>
+      <HintPath>C:\Users\Niels\Desktop\LeagueSharp\System\LeagueSharp.dll</HintPath>
     </Reference>
     <Reference Include="LeagueSharp.Common">
-      <HintPath>..\..\..\..\..\..\League#\System\LeagueSharp.Common.dll</HintPath>
+      <HintPath>C:\Users\Niels\Desktop\LeagueSharp\System\LeagueSharp.Common.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX">
-      <HintPath>..\..\..\..\..\..\League#\System\SharpDX.dll</HintPath>
+      <HintPath>C:\Users\Niels\Desktop\LeagueSharp\System\SharpDX.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -54,9 +55,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Champion.cs" />
-    <Compile Include="KogMaw.cs" />
-    <Compile Include="Program.cs" />
+    <Compile Include="EasyKogMaw.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SkinManager.cs" />
+    <Compile Include="SpellManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

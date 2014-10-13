@@ -1,4 +1,4 @@
-using LeagueSharp;
+﻿using LeagueSharp;
 using LeagueSharp.Common;
 using System;
 using System.Collections.Generic;
@@ -9,11 +9,16 @@ using System.Threading.Tasks;
 
 namespace EasyAhri
 {
-    class Ahri : Champion
+    class EasyAhri : Champion
     {
+        static void Main(string[] args)
+        {
+            Champion Ezreal = new EasyAhri();
+        }
+
         public static Items.Item DFG;
 
-        public Ahri() : base("Ahri")
+        public EasyAhri() : base("Ahri")
         {
             DFG = Utility.Map.GetMap()._MapType == Utility.Map.MapType.TwistedTreeline ? new Items.Item(3188, 750) : new Items.Item(3128, 750);
         }
@@ -27,15 +32,15 @@ namespace EasyAhri
             Skins.Add("Popstar Ahri");
         }
 
-        protected override void InitializeSpells()
+        protected override void InitializeSpells(ref SpellManager Spells)
         {
-            Spell Q = new Spell(SpellSlot.Q, 900f);
-            Q.SetSkillshot(0.25f, 100f, 1200f, false, SkillshotType.SkillshotLine);
+            Spell Q = new Spell(SpellSlot.Q, 1000f);
+            Q.SetSkillshot(0.25f, 100f, 1250f, false, SkillshotType.SkillshotLine);
 
-            Spell W = new Spell(SpellSlot.W, 800);
+            Spell W = new Spell(SpellSlot.W, 800f);
 
-            Spell E = new Spell(SpellSlot.E, 975);
-            E.SetSkillshot(0.25f, 60f, 1200f, true, SkillshotType.SkillshotLine);
+            Spell E = new Spell(SpellSlot.E, 1000f);
+            E.SetSkillshot(0.25f, 60f, 1500f, true, SkillshotType.SkillshotLine);
 
             Spell R = new Spell(SpellSlot.R, 450f);
 
@@ -45,7 +50,7 @@ namespace EasyAhri
             Spells.Add("R", R);
         }
 
-        protected override void CreateMenu()
+        protected override void InitializeMenu()
         {
             Menu.AddSubMenu(new Menu("Combo", "Combo"));
             Menu.SubMenu("Combo").AddItem(new MenuItem("Combo_q", "Use Q").SetValue(true));
@@ -72,38 +77,29 @@ namespace EasyAhri
 
         protected override void Combo()
         {
-            if (Menu.Item("Combo_e").GetValue<bool>()) Cast("E", SimpleTs.DamageType.Magical, true);
-            if (Menu.Item("Combo_q").GetValue<bool>()) Cast("Q", SimpleTs.DamageType.Magical, true);
-            if (Menu.Item("Combo_w").GetValue<bool>()) CastSelf("W", SimpleTs.DamageType.Magical);
+            if (Menu.Item("Combo_e").GetValue<bool>()) Spells.CastSkillshot("E", SimpleTs.DamageType.Magical);
+            if (Menu.Item("Combo_q").GetValue<bool>()) Spells.CastSkillshot("Q", SimpleTs.DamageType.Magical, HitChance.High);
+            if (Menu.Item("Combo_w").GetValue<bool>()) CastW();
         }
         protected override void Harass()
         {
-            if (Menu.Item("Harass_e").GetValue<bool>()) Cast("E", SimpleTs.DamageType.Magical, true);
-            if (Menu.Item("Harass_q").GetValue<bool>()) Cast("Q", SimpleTs.DamageType.Magical, true);
-            if (Menu.Item("Harass_w").GetValue<bool>()) CastSelf("W", SimpleTs.DamageType.Magical);
+            if (Menu.Item("Harass_e").GetValue<bool>()) Spells.CastSkillshot("E", SimpleTs.DamageType.Magical);
+            if (Menu.Item("Harass_q").GetValue<bool>()) Spells.CastSkillshot("Q", SimpleTs.DamageType.Magical);
+            if (Menu.Item("Harass_w").GetValue<bool>()) CastW();
         }
         protected override void Auto()
         {
-            if (Menu.Item("Auto_e").GetValue<bool>()) Cast("E", SimpleTs.DamageType.Magical, true);
-            if (Menu.Item("Auto_q").GetValue<bool>()) Cast("Q", SimpleTs.DamageType.Magical, true);
-            if (Menu.Item("Auto_w").GetValue<bool>()) CastSelf("W", SimpleTs.DamageType.Magical);
+            if (Menu.Item("Auto_e").GetValue<bool>()) Spells.CastSkillshot("E", SimpleTs.DamageType.Magical);
+            if (Menu.Item("Auto_q").GetValue<bool>()) Spells.CastSkillshot("Q", SimpleTs.DamageType.Magical);
+            if (Menu.Item("Auto_w").GetValue<bool>()) CastW();
         }
 
-        protected override void Drawing()
+        protected override void Draw()
         {
-            Circle qCircle = Menu.Item("Drawing_q").GetValue<Circle>();
-            Circle wCircle = Menu.Item("Drawing_w").GetValue<Circle>();
-            Circle eCircle = Menu.Item("Drawing_e").GetValue<Circle>();
-            Circle rCircle = Menu.Item("Drawing_r").GetValue<Circle>();
-
-            if (qCircle.Active)
-                Utility.DrawCircle(Player.Position, Spells["Q"].Range, qCircle.Color);
-            if (wCircle.Active)
-                Utility.DrawCircle(Player.Position, Spells["W"].Range, wCircle.Color);
-            if (eCircle.Active)
-                Utility.DrawCircle(Player.Position, Spells["E"].Range, eCircle.Color); 
-            if (rCircle.Active)
-                Utility.DrawCircle(Player.Position, Spells["R"].Range, rCircle.Color);
+            DrawCircle("Drawing_q", "Q");
+            DrawCircle("Drawing_w", "W");
+            DrawCircle("Drawing_e", "E");
+            DrawCircle("Drawing_r", "R");
 
             Utility.HpBarDamageIndicator.DamageToUnit = ComboDamage;
             Utility.HpBarDamageIndicator.Enabled = Menu.Item("Drawing_damage").GetValue<bool>();
@@ -113,18 +109,28 @@ namespace EasyAhri
         {
             float damage = 0;
 
-            if(DFG.IsReady())
+            if (DFG.IsReady())
                 damage += (float)Damage.GetItemDamage(Player, hero, Damage.DamageItems.Dfg) / 1.2f;
-            if (Spells["Q"].IsReady())
-                damage += (float)Damage.GetSpellDamage(Player, hero, SpellSlot.Q);
-            if (Spells["W"].IsReady())
+            if (Spells.get("Q").IsReady())
+                damage += (float)Damage.GetSpellDamage(Player, hero, SpellSlot.Q) * 2;
+            if (Spells.get("W").IsReady())
                 damage += (float)Damage.GetSpellDamage(Player, hero, SpellSlot.W);
-            if (Spells["E"].IsReady())
+            if (Spells.get("E").IsReady())
                 damage += (float)Damage.GetSpellDamage(Player, hero, SpellSlot.E);
-            if (Spells["R"].IsReady())
+            if (Spells.get("R").IsReady())
                 damage += (float)Damage.GetSpellDamage(Player, hero, SpellSlot.R);
 
             return damage * (DFG.IsReady() ? 1.2f : 1f);
+        }
+
+        private void CastW()
+        {
+            if (!Spells.get("W").IsReady()) return;
+
+            Obj_AI_Hero target = SimpleTs.GetTarget(Spells.get("W").Range, SimpleTs.DamageType.Magical);
+            if (target == null) return;
+
+            Spells.get("W").Cast();
         }
     }
 }

@@ -9,11 +9,16 @@ using System.Threading.Tasks;
 
 namespace EasyRyze
 {
-    class Ryze : Champion
+    class EasyRyze : Champion
     {
-        public Ryze() : base("Ryze")
+        static void Main(string[] args)
         {
-            AntiGapcloser.OnEnemyGapcloser += AntiGapcloser_OnEnemyGapcloser;
+            Champion KogMaw = new EasyRyze();
+        }
+
+        public EasyRyze() : base("Ryze")
+        {
+
         }
 
         protected override void InitializeSkins(ref SkinManager Skins)
@@ -28,7 +33,7 @@ namespace EasyRyze
             Skins.Add("Dark Crystal Ryze");
             Skins.Add("Pirate Ryze");
         }
-        protected override void InitializeSpells()
+        protected override void InitializeSpells(ref SpellManager Spells)
         {
             Spell Q = new Spell(SpellSlot.Q, 625);
             Spell W = new Spell(SpellSlot.W, 600);
@@ -40,8 +45,7 @@ namespace EasyRyze
             Spells.Add("E", E);
             Spells.Add("R", R);
         }
-
-        protected override void CreateMenu()
+        protected override void InitializeMenu()
         {
             Menu.AddSubMenu(new Menu("Combo", "Combo"));
             Menu.SubMenu("Combo").AddItem(new MenuItem("Combo_smart", "Use smart combo").SetValue(true));
@@ -78,91 +82,79 @@ namespace EasyRyze
 
             if (Menu.Item("Combo_w").GetValue<bool>() && Menu.Item("Combo_smart").GetValue<bool>())
             {
-                if (Spells["W"].IsReady())
+                if (Spells.get("W").IsReady())
                 {
-                    Obj_AI_Hero target = SimpleTs.GetTarget(Spells["Q"].Range, SimpleTs.DamageType.Magical);
-                    if (target.Distance(Player) < 200) Cast("E", SimpleTs.DamageType.Magical, Menu.Item("Combo_packet").GetValue<bool>());
-                    else if (target.Distance(Player) < Spells["W"].Range - 100) Cast("Q", SimpleTs.DamageType.Magical, Menu.Item("Combo_packet").GetValue<bool>());
-                    else if (target.Distance(Player) > Spells["W"].Range)
+                    Obj_AI_Hero target = SimpleTs.GetTarget(Spells.get("Q").Range, SimpleTs.DamageType.Magical);
+                    if (target.Distance(Player) < 200) Spells.CastOnTarget("E", SimpleTs.DamageType.Magical, Menu.Item("Combo_packet").GetValue<bool>());
+                    else if (target.Distance(Player) < Spells.get("W").Range - 100) Spells.CastOnTarget("Q", SimpleTs.DamageType.Magical, Menu.Item("Combo_packet").GetValue<bool>());
+                    else if (target.Distance(Player) > Spells.get("W").Range)
                     {
                         if (Damage.GetSpellDamage(Player, target, SpellSlot.Q) >= target.Health)
-                            Cast("Q", SimpleTs.DamageType.Magical, Menu.Item("Combo_packet").GetValue<bool>());
+                            Spells.CastOnTarget("Q", SimpleTs.DamageType.Magical, Menu.Item("Combo_packet").GetValue<bool>());
                         else
                             return;
                     }
                 }
             }
 
-            if (Menu.Item("Combo_w").GetValue<bool>()) Cast("W", SimpleTs.DamageType.Magical, Menu.Item("Combo_packet").GetValue<bool>());
-            if (Menu.Item("Combo_q").GetValue<bool>()) Cast("Q", SimpleTs.DamageType.Magical, Menu.Item("Combo_packet").GetValue<bool>());
-            if (Menu.Item("Combo_e").GetValue<bool>()) Cast("E", SimpleTs.DamageType.Magical, Menu.Item("Combo_packet").GetValue<bool>());
+            if (Menu.Item("Combo_w").GetValue<bool>()) Spells.CastOnTarget("W", SimpleTs.DamageType.Magical, Menu.Item("Combo_packet").GetValue<bool>());
+            if (Menu.Item("Combo_q").GetValue<bool>()) Spells.CastOnTarget("Q", SimpleTs.DamageType.Magical, Menu.Item("Combo_packet").GetValue<bool>());
+            if (Menu.Item("Combo_e").GetValue<bool>()) Spells.CastOnTarget("E", SimpleTs.DamageType.Magical, Menu.Item("Combo_packet").GetValue<bool>());
         }
         protected override void Harass()
         {
-            if (Menu.Item("Harass_w").GetValue<bool>()) Cast("W", SimpleTs.DamageType.Magical, Menu.Item("Harass_packet").GetValue<bool>());
-            if (Menu.Item("Harass_q").GetValue<bool>()) Cast("Q", SimpleTs.DamageType.Magical, Menu.Item("Harass_packet").GetValue<bool>());
-            if (Menu.Item("Harass_e").GetValue<bool>()) Cast("E", SimpleTs.DamageType.Magical, Menu.Item("Harass_packet").GetValue<bool>());
+            if (Menu.Item("Harass_w").GetValue<bool>()) Spells.CastOnTarget("W", SimpleTs.DamageType.Magical, Menu.Item("Harass_packet").GetValue<bool>());
+            if (Menu.Item("Harass_q").GetValue<bool>()) Spells.CastOnTarget("Q", SimpleTs.DamageType.Magical, Menu.Item("Harass_packet").GetValue<bool>());
+            if (Menu.Item("Harass_e").GetValue<bool>()) Spells.CastOnTarget("E", SimpleTs.DamageType.Magical, Menu.Item("Harass_packet").GetValue<bool>());
         }
         protected override void Auto()
         {
-            if (Menu.Item("Auto_w").GetValue<bool>()) Cast("W", SimpleTs.DamageType.Magical, Menu.Item("Auto_packet").GetValue<bool>());
-            if (Menu.Item("Auto_q").GetValue<bool>()) Cast("Q", SimpleTs.DamageType.Magical, Menu.Item("Auto_packet").GetValue<bool>());
-            if (Menu.Item("Auto_e").GetValue<bool>()) Cast("E", SimpleTs.DamageType.Magical, Menu.Item("Auto_packet").GetValue<bool>());
+            if (Menu.Item("Auto_w").GetValue<bool>()) Spells.CastOnTarget("W", SimpleTs.DamageType.Magical, Menu.Item("Auto_packet").GetValue<bool>());
+            if (Menu.Item("Auto_q").GetValue<bool>()) Spells.CastOnTarget("Q", SimpleTs.DamageType.Magical, Menu.Item("Auto_packet").GetValue<bool>());
+            if (Menu.Item("Auto_e").GetValue<bool>()) Spells.CastOnTarget("E", SimpleTs.DamageType.Magical, Menu.Item("Auto_packet").GetValue<bool>());
         }
-        protected override void Drawing()
-        {
-            Circle qCircle = Menu.Item("Drawing_q").GetValue<Circle>();
-            Circle wCircle = Menu.Item("Drawing_w").GetValue<Circle>();
-            Circle eCircle = Menu.Item("Drawing_e").GetValue<Circle>();
 
-            if (qCircle.Active)
-                Utility.DrawCircle(Player.Position, Spells["Q"].Range, qCircle.Color);
-            if (wCircle.Active)
-                Utility.DrawCircle(Player.Position, Spells["W"].Range, wCircle.Color);
-            if (eCircle.Active)
-                Utility.DrawCircle(Player.Position, Spells["E"].Range, eCircle.Color);
+        protected override void Draw()
+        {
+            DrawCircle("Drawing_q", "Q");
+            DrawCircle("Drawing_w", "W");
+            DrawCircle("Drawing_e", "E");
 
             Utility.HpBarDamageIndicator.DamageToUnit = ComboDamage;
             Utility.HpBarDamageIndicator.Enabled = Menu.Item("Drawing_damage").GetValue<bool>();
         }
         protected override void Update()
         {
-            Orbwalker.SetAttacks(!(Orbwalker.ActiveMode == Orbwalking.OrbwalkingMode.Combo && (Spells["Q"].IsReady() || Spells["W"].IsReady() || Spells["E"].IsReady())));
+            Orbwalker.SetAttacks(!(Orbwalker.ActiveMode == Orbwalking.OrbwalkingMode.Combo && (Spells.get("Q").IsReady() || Spells.get("W").IsReady() || Spells.get("E").IsReady())));
 
-            if (Menu.Item("Auto_r").GetValue<Slider>().Value <= Utility.CountEnemysInRange((int)Spells["R"].Range, Player))
-                Spells["R"].Cast();
-        }
-
-        void AntiGapcloser_OnEnemyGapcloser(ActiveGapcloser gapcloser)
-        {
-            if (Menu.Item("Auto_wgapcloser").GetValue<bool>())
-            {
-                if (Player.Distance(gapcloser.Sender) <= Spells["W"].Range)
-                    Spells["W"].CastOnUnit(gapcloser.Sender);
-            }
+            if (Menu.Item("Auto_r").GetValue<Slider>().Value <= Utility.CountEnemysInRange((int)Spells.get("R").Range, Player))
+                Spells.get("R").Cast();
         }
 
         private float ComboDamage(Obj_AI_Hero hero)
         {
             float damage = 0;
-            if (Spells["Q"].IsReady())
-                damage += (float)Damage.GetSpellDamage(Player, hero, SpellSlot.Q) * 1.3f;
-            if (Spells["W"].IsReady())
-                damage += (float)Damage.GetSpellDamage(Player, hero, SpellSlot.W) * 1.3f;
-            if (Spells["E"].IsReady())
-                damage += (float)Damage.GetSpellDamage(Player, hero, SpellSlot.E) * 1.3f;
+            //if (Spells.get("Q").IsReady())
+            if(Spells.get("Q").Level > 0)
+                damage += (float)Damage.GetSpellDamage(Player, hero, SpellSlot.Q) * 1.2f;
+            //if (Spells.get("W").IsReady())
+            if (Spells.get("W").Level > 0)
+                damage += (float)Damage.GetSpellDamage(Player, hero, SpellSlot.W) * 1.2f;
+            //if (Spells.get("E").IsReady())
+            if (Spells.get("E").Level > 0)
+                damage += (float)Damage.GetSpellDamage(Player, hero, SpellSlot.E) * 1.2f;
             return damage;
         }
 
         private void CastR()
         {
-            if (!Spells["R"].IsReady()) return;
+            if (!Spells.get("R").IsReady()) return;
 
-            Obj_AI_Hero target = SimpleTs.GetTarget(Spells["R"].Range, SimpleTs.DamageType.Magical);
+            Obj_AI_Hero target = SimpleTs.GetTarget(Spells.get("R").Range, SimpleTs.DamageType.Magical);
             if (target == null) return;
             if (ComboDamage(target) < target.Health) return;
 
-            Spells["R"].Cast();
+            Spells.get("R").Cast();
         }
     }
 }

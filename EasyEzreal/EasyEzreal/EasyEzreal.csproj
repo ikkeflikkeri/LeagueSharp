@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Release</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{C35CF7F9-C601-41B3-A3AE-3639D5C26E14}</ProjectGuid>
+    <ProjectGuid>{0C8D13EA-E89E-4368-A320-EDC5CC8CA25C}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>EasyEzreal</RootNamespace>
@@ -36,14 +36,13 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="LeagueSharp">
-      <HintPath>..\..\..\..\..\..\League#\System\LeagueSharp.dll</HintPath>
+      <HintPath>C:\Users\Niels\Desktop\LeagueSharp\System\LeagueSharp.dll</HintPath>
     </Reference>
     <Reference Include="LeagueSharp.Common">
-      <HintPath>..\..\..\..\..\..\League#\System\LeagueSharp.Common.dll</HintPath>
+      <HintPath>C:\Users\Niels\Desktop\LeagueSharp\System\LeagueSharp.Common.dll</HintPath>
     </Reference>
-    <Reference Include="SharpDX, Version=2.5.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\League#\System\SharpDX.dll</HintPath>
+    <Reference Include="SharpDX">
+      <HintPath>C:\Users\Niels\Desktop\LeagueSharp\System\SharpDX.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -56,9 +55,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Champion.cs" />
-    <Compile Include="Ezreal.cs" />
-    <Compile Include="Program.cs" />
+    <Compile Include="EazyEzreal.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SkinManager.cs" />
+    <Compile Include="SpellManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

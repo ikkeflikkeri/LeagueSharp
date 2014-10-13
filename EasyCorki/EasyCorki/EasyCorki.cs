@@ -9,12 +9,18 @@ using System.Threading.Tasks;
 
 namespace EasyCorki
 {
-    class Corki : Champion
+    class EasyCorki : Champion
     {
-        public Corki() : base("Corki")
+        static void Main(string[] args)
+        {
+            Champion KogMaw = new EasyCorki();
+        }
+
+        public EasyCorki() : base("Corki")
         {
 
         }
+
         protected override void InitializeSkins(ref SkinManager Skins)
         {
             Skins.Add("Corki");
@@ -25,10 +31,10 @@ namespace EasyCorki
             Skins.Add("Urfrider Corki");
             Skins.Add("Dragonwing Corki");
         }
-        protected override void InitializeSpells()
+        protected override void InitializeSpells(ref SpellManager Spells)
         {
             Spell Q = new Spell(SpellSlot.Q, 825f);
-            Q.SetSkillshot(0.3f, 250f, 1250f, false, SkillshotType.SkillshotCircle);
+            Q.SetSkillshot(0.3f, 250f, 1125f, false, SkillshotType.SkillshotCircle);
 
             Spell E = new Spell(SpellSlot.E, 600f);
             E.SetSkillshot(0f, (float)Math.PI / 180f * 45f, float.MaxValue, false, SkillshotType.SkillshotCone);
@@ -45,7 +51,7 @@ namespace EasyCorki
             Spells.Add("RBig", RBig);
             Spells.Add("RSmall", RSmall);
         }
-        protected override void CreateMenu()
+        protected override void InitializeMenu()
         {
             Menu.AddSubMenu(new Menu("Combo", "Combo"));
             Menu.SubMenu("Combo").AddItem(new MenuItem("Combo_q", "Use Q").SetValue(true));
@@ -69,62 +75,59 @@ namespace EasyCorki
             Menu.SubMenu("Drawing").AddItem(new MenuItem("Drawing_r", "R Range").SetValue(new Circle(true, Color.FromArgb(100, 0, 255, 0))));
             Menu.SubMenu("Drawing").AddItem(new MenuItem("Drawing_damage", "Q+R damage indicator").SetValue(true));
         }
+
         protected override void Combo()
         {
-            if (Menu.Item("Combo_q").GetValue<bool>()) Cast("Q", SimpleTs.DamageType.Magical, true);
-            if (Menu.Item("Combo_e").GetValue<bool>()) Cast("E", SimpleTs.DamageType.Physical, true);
-            if (Menu.Item("Combo_r").GetValue<bool>()) Cast("R", SimpleTs.DamageType.Magical, true);
+            if (Menu.Item("Combo_q").GetValue<bool>()) Spells.CastSkillshot("Q", SimpleTs.DamageType.Magical, HitChance.VeryHigh, true, true);
+            if (Menu.Item("Combo_e").GetValue<bool>()) Spells.CastSkillshot("E", SimpleTs.DamageType.Physical);
+            if (Menu.Item("Combo_r").GetValue<bool>()) Spells.CastSkillshot("R", SimpleTs.DamageType.Magical);
         }
         protected override void Harass()
         {
-            if (Menu.Item("Harass_q").GetValue<bool>()) Cast("Q", SimpleTs.DamageType.Magical, true);
-            if (Menu.Item("Harass_e").GetValue<bool>()) Cast("E", SimpleTs.DamageType.Physical, true);
-            if (Menu.Item("Harass_r").GetValue<bool>() && missiles() > Menu.Item("Harass_rlimit").GetValue<Slider>().Value) Cast("R", SimpleTs.DamageType.Magical, true);
+            if (Menu.Item("Harass_q").GetValue<bool>()) Spells.CastSkillshot("Q", SimpleTs.DamageType.Magical, HitChance.VeryHigh, true, true);
+            if (Menu.Item("Harass_e").GetValue<bool>()) Spells.CastSkillshot("E", SimpleTs.DamageType.Physical);
+            if (Menu.Item("Harass_r").GetValue<bool>() && missiles() > Menu.Item("Harass_rlimit").GetValue<Slider>().Value) Spells.CastSkillshot("R", SimpleTs.DamageType.Magical);
         }
         protected override void Auto()
         {
-            if (Menu.Item("Auto_q").GetValue<bool>()) Cast("Q", SimpleTs.DamageType.Magical, true);
-            if (Menu.Item("Auto_e").GetValue<bool>()) Cast("E", SimpleTs.DamageType.Physical, true);
-            if (Menu.Item("Auto_r").GetValue<bool>() && missiles() > Menu.Item("Auto_rlimit").GetValue<Slider>().Value) Cast("R", SimpleTs.DamageType.Magical, true);
+            if (Menu.Item("Auto_q").GetValue<bool>()) Spells.CastSkillshot("Q", SimpleTs.DamageType.Magical, HitChance.VeryHigh, true, true);
+            if (Menu.Item("Auto_e").GetValue<bool>()) Spells.CastSkillshot("E", SimpleTs.DamageType.Physical);
+            if (Menu.Item("Auto_r").GetValue<bool>() && missiles() > Menu.Item("Auto_rlimit").GetValue<Slider>().Value) Spells.CastSkillshot("R", SimpleTs.DamageType.Magical);
         }
-        protected override void Drawing()
+
+        protected override void Draw()
         {
-            Circle qCircle = Menu.Item("Drawing_q").GetValue<Circle>();
-            Circle rCircle = Menu.Item("Drawing_r").GetValue<Circle>();
-
-            if (qCircle.Active)
-                Utility.DrawCircle(Player.Position, Spells["Q"].Range, qCircle.Color);
-            if (rCircle.Active)
-                Utility.DrawCircle(Player.Position, Spells["R"].Range, rCircle.Color);
-
+            DrawCircle("Drawing_q", "Q");
+            DrawCircle("Drawing_r", "R");
+            
             Utility.HpBarDamageIndicator.DamageToUnit = ComboDamage;
             Utility.HpBarDamageIndicator.Enabled = Menu.Item("Drawing_damage").GetValue<bool>();
         }
         protected override void Update()
         {
             if (Player.HasBuff("CorkiMissileBarrageCounterBig"))
-                Spells["R"].Range = Spells["RBig"].Range;
+                Spells.get("R").Range = Spells.get("RBig").Range;
             else
-                Spells["R"].Range = Spells["RSmall"].Range;
+                Spells.get("R").Range = Spells.get("RSmall").Range;
         }
 
         private float ComboDamage(Obj_AI_Hero hero)
         {
             float damage = 0;
 
-            if (Spells["Q"].IsReady())
+            if (Spells.get("Q").IsReady())
                 damage += (float)Damage.GetSpellDamage(Player, hero, SpellSlot.Q);
-            if (Spells["R"].IsReady())
+            if (Spells.get("R").IsReady())
             {
                 float rDamage = (float)Damage.GetSpellDamage(Player, hero, SpellSlot.R);
-                if(Player.HasBuff("CorkiMissileBarrageCounterBig"))
+                if (Player.HasBuff("CorkiMissileBarrageCounterBig"))
                     rDamage *= 1.5f;
                 damage += rDamage;
             }
 
             return damage;
         }
-        
+
         private int missiles()
         {
             return Player.Spellbook.GetSpell(SpellSlot.R).Ammo;
