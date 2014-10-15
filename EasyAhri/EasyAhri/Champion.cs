@@ -58,12 +58,20 @@ abstract class Champion
         Game.OnGameEnd += Game_OnGameEnd;
         Drawing.OnDraw += Drawing_OnDraw;
 
-        using (WebClient wc = new WebClient())
+        try
         {
-            wc.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";
-            string amount = wc.UploadString("http://niels-wouters.be/LeagueSharp/playcount.php", "assembly=" + ChampName);
-            Game.PrintChat("Easy" + ChampName + " is loaded! This assembly has been played in " + amount + " games.");
+            using (WebClient wc = new WebClient())
+            {
+                wc.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";
+                string amount = wc.UploadString("http://niels-wouters.be/LeagueSharp/playcount.php", "assembly=" + ChampName);
+                Game.PrintChat("Easy" + ChampName + " is loaded! This assembly has been played in " + amount + " games.");
+            }
         }
+        catch (Exception)
+        {
+            Game.PrintChat("Easy" + ChampName + " is loaded! Error trying to contact EasyServer!");
+        }
+        
     }
 
     private void Drawing_OnDraw(EventArgs args)
