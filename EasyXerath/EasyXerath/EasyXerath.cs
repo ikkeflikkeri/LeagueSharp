@@ -16,14 +16,13 @@ namespace EasyXerath
             new EasyXerath();
         }
 
+        private Obj_AI_Hero RTarget = null;
+        private int RChange = 0;
+
         public EasyXerath() : base("Xerath")
         {
             Drawing.OnEndScene += Drawing_OnEndScene;
-        }
-
-        void Drawing_OnEndScene(EventArgs args)
-        {
-            Utility.DrawCircle(Player.Position, Spells.get("R").Range, Color.FromArgb(255, 255, 255), 1, 30, true);
+            Interrupter.OnPossibleToInterrupt += Interrupter_OnPossibleToInterrupt;
         }
 
         protected override void InitializeSkins(ref SkinManager Skins)
@@ -84,6 +83,7 @@ namespace EasyXerath
             Menu.AddSubMenu(new Menu("Misc", "Misc"));
             Menu.SubMenu("Misc").AddItem(new MenuItem("Misc_wcenter", "Cast W centered").SetValue(true));
             Menu.SubMenu("Misc").AddItem(new MenuItem("Misc_stun", "Use E").SetValue<KeyBind>(new KeyBind("T".ToCharArray()[0], KeyBindType.Press)));
+            Menu.SubMenu("Misc").AddItem(new MenuItem("Misc_interrupt", "Use E to interrupt spells").SetValue(true));
             Menu.SubMenu("Misc").AddItem(new MenuItem("Misc_ult", "Use R when ult is activated").SetValue(true));
         }
 
@@ -150,9 +150,6 @@ namespace EasyXerath
                 Spells.get("R").Range = 1750 + Spells.get("R").Level * 1200;
         }
 
-        private Obj_AI_Hero RTarget = null;
-        private int RChange = 0;
-
         private void CastR()
         {
             Spell R = Spells.get("R");
@@ -187,6 +184,22 @@ namespace EasyXerath
             if(Spells.get("R").Level > 0)
                 return (float)Damage.GetSpellDamage(Player, hero, SpellSlot.R) * 2.95f;
             return 0f;
+        }
+
+        private void Drawing_OnEndScene(EventArgs args)
+        {
+            if (Menu.Item("Drawing_r").GetValue<bool>())
+                Utility.DrawCircle(Player.Position, Spells.get("R").Range, Color.FromArgb(255, 255, 255), 1, 30, true);
+        }
+
+        private void Interrupter_OnPossibleToInterrupt(Obj_AI_Base unit, InterruptableSpell spell)
+        {
+            if (Menu.Item("Misc_interrupt").GetValue<bool>())
+            {
+                Spell E = Spells.get("E");
+                if (ObjectManager.Player.Distance(unit) < E.Range && E.IsReady() && unit.IsEnemy)
+                    Spells.CastSkillshot("E", unit, HitChance.High);
+            }
         }
     }
 }
