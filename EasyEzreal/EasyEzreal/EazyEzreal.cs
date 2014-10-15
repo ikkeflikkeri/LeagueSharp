@@ -13,7 +13,7 @@ namespace EasyEzreal
     {
         static void Main(string[] args)
         {
-            Champion Ezreal = new EazyEzreal();
+            new EazyEzreal();
         }
 
         public EazyEzreal() : base("Ezreal")

@@ -13,7 +13,7 @@ namespace EasyRyze
     {
         static void Main(string[] args)
         {
-            Champion KogMaw = new EasyRyze();
+            new EasyRyze();
         }
 
         public EasyRyze() : base("Ryze")

@@ -13,7 +13,7 @@ namespace EasyAhri
     {
         static void Main(string[] args)
         {
-            Champion Ezreal = new EasyAhri();
+            new EasyAhri();
         }
 
         public static Items.Item DFG;

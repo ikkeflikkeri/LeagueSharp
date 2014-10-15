@@ -13,7 +13,7 @@ namespace EasyKogMaw
     {
         static void Main(string[] args)
         {
-            Champion KogMaw = new EasyKogMaw();
+            new EasyKogMaw();
         }
 
         public EasyKogMaw() : base("KogMaw")

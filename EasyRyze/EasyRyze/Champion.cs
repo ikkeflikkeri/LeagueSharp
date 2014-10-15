@@ -71,7 +71,6 @@ abstract class Champion
         {
             Game.PrintChat("Easy" + ChampName + " is loaded! Error trying to contact EasyServer!");
         }
-        
     }
 
     private void Drawing_OnDraw(EventArgs args)

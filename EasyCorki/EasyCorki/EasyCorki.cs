@@ -13,7 +13,7 @@ namespace EasyCorki
     {
         static void Main(string[] args)
         {
-            Champion KogMaw = new EasyCorki();
+            new EasyCorki();
         }
 
         public EasyCorki() : base("Corki")
