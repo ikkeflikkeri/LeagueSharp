@@ -173,7 +173,7 @@ namespace EasyXerath
 
             if (target.IsValidTarget(R.Range) && R.GetPrediction(target).Hitchance >= HitChance.VeryHigh)
             {
-                R.Cast(target, true, true);
+                R.Cast(target, true);
                 RTarget = target;
                 RChange = Environment.TickCount + 600;
             }
