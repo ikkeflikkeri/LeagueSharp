@@ -71,7 +71,7 @@ namespace EasyXerath
             Menu.AddSubMenu(new Menu("Auto", "Auto"));
             Menu.SubMenu("Auto").AddItem(new MenuItem("Auto_q", "Use Q").SetValue(false));
             Menu.SubMenu("Auto").AddItem(new MenuItem("Auto_w", "Use W").SetValue(false));
-            Menu.SubMenu("Auto").AddItem(new MenuItem("Auto_e", "Use E").SetValue(false));
+            Menu.SubMenu("Auto").AddItem(new MenuItem("Auto_e", "Use E").SetValue(true));
 
             Menu.AddSubMenu(new Menu("Drawing", "Drawing"));
             Menu.SubMenu("Drawing").AddItem(new MenuItem("Drawing_q", "Use Q").SetValue(new Circle(true, Color.FromArgb(100, 0, 255, 0))));
