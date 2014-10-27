@@ -125,7 +125,7 @@ namespace EasyRyze
         }
         protected override void Update()
         {
-            Orbwalker.SetAttacks(!(Orbwalker.ActiveMode == Orbwalking.OrbwalkingMode.Combo && (Spells.get("Q").IsReady() || Spells.get("W").IsReady() || Spells.get("E").IsReady())));
+            Orbwalker.SetAttack(!(Orbwalker.ActiveMode == Orbwalking.OrbwalkingMode.Combo && (Spells.get("Q").IsReady() || Spells.get("W").IsReady() || Spells.get("E").IsReady())));
 
             if (Menu.Item("Auto_r").GetValue<Slider>().Value <= Utility.CountEnemysInRange((int)Spells.get("R").Range, Player))
                 Spells.get("R").Cast();
