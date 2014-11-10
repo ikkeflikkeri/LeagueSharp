@@ -66,7 +66,7 @@ class BushManager
                 x.Player.IsValid &&
                 !x.Player.IsVisible &&
                 !x.Player.IsDead &&
-                x.Player.Distance(ObjectManager.Player.ServerPosition) < float.MaxValue &&
+                x.Player.Distance(ObjectManager.Player.ServerPosition) < 1100 &&
                 time - x.LastSeen < 2500).Select(x => x.Player))
             {
                 var bestWardPos = GetWardPos(enemy.ServerPosition, 165, 2);
