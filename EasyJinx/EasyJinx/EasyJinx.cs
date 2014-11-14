@@ -123,7 +123,7 @@ namespace EasyJinx
 
             if (Menu.Item("Auto_r").GetValue<bool>()) CastR();
 
-            if (Menu.Item("Misc_qswitch").GetValue<bool>() && Orbwalker.ActiveMode == Orbwalking.OrbwalkingMode.LaneClear || Orbwalker.ActiveMode == Orbwalking.OrbwalkingMode.LastHit)
+            if (Menu.Item("Misc_qswitch").GetValue<bool>() && Orbwalker.ActiveMode == Orbwalking.OrbwalkingMode.LaneClear || Orbwalker.ActiveMode == Orbwalking.OrbwalkingMode.LastHit || Orbwalker.ActiveMode == Orbwalking.OrbwalkingMode.Mixed)
             {
                 if (IsCannon()) Spells.get("Q").Cast();
             }
