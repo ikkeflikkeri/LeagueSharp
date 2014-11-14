@@ -22,14 +22,6 @@ namespace EasyJinx
             AntiGapcloser.OnEnemyGapcloser += AntiGapcloser_OnEnemyGapcloser;
         }
 
-        void AntiGapcloser_OnEnemyGapcloser(ActiveGapcloser gapcloser)
-        {
-            Spell E = Spells.get("E");
-
-            if (Menu.Item("Auto_egap").GetValue<bool>() && E.IsReady() && gapcloser.Sender.IsValidTarget(E.Range))
-                Spells.CastSkillshot("E", gapcloser.Sender, HitChance.VeryHigh);
-        }
-
         protected override void InitializeSkins(ref SkinManager Skins)
         {
             Skins.Add("Jinx");
@@ -90,13 +82,13 @@ namespace EasyJinx
         {
             if (Menu.Item("Combo_q").GetValue<bool>()) CastQ();
             if (Menu.Item("Combo_w").GetValue<bool>()) CastW();
-            if (Menu.Item("Combo_e").GetValue<bool>()) CastE(); //Spells.CastSkillshot("E", SimpleTs.DamageType.Physical, HitChance.VeryHigh, true, false);
+            if (Menu.Item("Combo_e").GetValue<bool>()) CastE();
         }
         protected override void Harass()
         {
             if (Menu.Item("Harass_q").GetValue<bool>()) CastQ();
             if (Menu.Item("Harass_w").GetValue<bool>()) CastW();
-            if (Menu.Item("Harass_e").GetValue<bool>()) CastE(); //Spells.CastSkillshot("E", SimpleTs.DamageType.Physical, HitChance.VeryHigh, true, false);
+            if (Menu.Item("Harass_e").GetValue<bool>()) CastE();
         }
 
         private void CastE()
@@ -248,6 +240,14 @@ namespace EasyJinx
             if (!R.IsReady()) return 0;
 
             return (float)Damage.GetSpellDamage(Player, hero, SpellSlot.R) + (float)Damage.CalcDamage(Player, hero, Damage.DamageType.Physical, (hero.MaxHealth - hero.Health) * 0.22);
+        }
+
+        private void AntiGapcloser_OnEnemyGapcloser(ActiveGapcloser gapcloser)
+        {
+            Spell E = Spells.get("E");
+
+            if (Menu.Item("Auto_egap").GetValue<bool>() && E.IsReady() && gapcloser.Sender.IsValidTarget(E.Range))
+                Spells.CastSkillshot("E", gapcloser.Sender, HitChance.VeryHigh);
         }
     }
 }
