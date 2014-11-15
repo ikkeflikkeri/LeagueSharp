@@ -80,15 +80,15 @@ namespace EasyJinx
 
         protected override void Combo()
         {
-            if (Menu.Item("Combo_q").GetValue<bool>()) CastQ();
-            if (Menu.Item("Combo_w").GetValue<bool>()) CastW();
             if (Menu.Item("Combo_e").GetValue<bool>()) CastE();
+            if (Menu.Item("Combo_w").GetValue<bool>()) CastW();
+            if (Menu.Item("Combo_q").GetValue<bool>()) CastQ();
         }
         protected override void Harass()
         {
-            if (Menu.Item("Harass_q").GetValue<bool>()) CastQ();
-            if (Menu.Item("Harass_w").GetValue<bool>()) CastW();
             if (Menu.Item("Harass_e").GetValue<bool>()) CastE();
+            if (Menu.Item("Harass_w").GetValue<bool>()) CastW();
+            if (Menu.Item("Harass_q").GetValue<bool>()) CastQ();
         }
 
         private void CastE()
