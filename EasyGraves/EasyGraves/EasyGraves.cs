@@ -22,14 +22,6 @@ namespace EasyJinx
             AntiGapcloser.OnEnemyGapcloser += AntiGapcloser_OnEnemyGapcloser;
         }
 
-        private void AntiGapcloser_OnEnemyGapcloser(ActiveGapcloser gapcloser)
-        {
-            Spell W = Spells.get("W");
-
-            if (Menu.Item("Auto_wgap").GetValue<bool>() && W.IsReady() && gapcloser.Sender.IsValidTarget(W.Range))
-                Spells.CastSkillshot("W", gapcloser.Sender, HitChance.VeryHigh);
-        }
-
         protected override void InitializeSkins(ref SkinManager Skins)
         {
             Skins.Add("Graves");
@@ -42,7 +34,7 @@ namespace EasyJinx
 
         protected override void InitializeSpells(ref SpellManager Spells)
         {
-            Spell Q = new Spell(SpellSlot.Q, 950f);
+            Spell Q = new Spell(SpellSlot.Q, 915f);
             Q.SetSkillshot(0.25f, 15f * 2 * (float)Math.PI / 180, 2000f, false, SkillshotType.SkillshotCone);
 
             Spell W = new Spell(SpellSlot.W, 950f);
@@ -73,6 +65,7 @@ namespace EasyJinx
             Menu.SubMenu("Auto").AddItem(new MenuItem("Auto_q", "Use Q").SetValue(false));
             Menu.SubMenu("Auto").AddItem(new MenuItem("Auto_w", "Use W").SetValue(false));
             Menu.SubMenu("Auto").AddItem(new MenuItem("Auto_wgap", "Use W on gapcloser").SetValue(true));
+            Menu.SubMenu("Auto").AddItem(new MenuItem("Auto_wgapmana", "Only if mana > combo mana").SetValue(true));
             Menu.SubMenu("Auto").AddItem(new MenuItem("Auto_r", "Use R on killable").SetValue(true));
             Menu.SubMenu("Auto").AddItem(new MenuItem("Auto_rrange", "Only R if out of range").SetValue(true));
 
@@ -144,6 +137,17 @@ namespace EasyJinx
         {
             if (Spells.get("R").Level == 0) return 0;
             return (float)Damage.CalcDamage(Player, hero, Damage.DamageType.Physical, Damage.GetSpellDamage(Player, hero, SpellSlot.R));
+        }
+
+        private void AntiGapcloser_OnEnemyGapcloser(ActiveGapcloser gapcloser)
+        {
+            if (Menu.Item("Auto_wgapmana").GetValue<bool>() && Player.Mana < (Player.Spellbook.GetSpell(SpellSlot.Q).ManaCost + Player.Spellbook.GetSpell(SpellSlot.E).ManaCost + Player.Spellbook.GetSpell(SpellSlot.W).ManaCost + Player.Spellbook.GetSpell(SpellSlot.R).ManaCost))
+                return;
+            
+            Spell W = Spells.get("W");
+
+            if (Menu.Item("Auto_wgap").GetValue<bool>() && W.IsReady() && gapcloser.Sender.IsValidTarget(W.Range))
+                Spells.CastSkillshot("W", gapcloser.Sender, HitChance.VeryHigh);
         }
     }
 }
