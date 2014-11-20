@@ -137,7 +137,7 @@ namespace EasyJinx
                 {
                     if (Menu.Item("Auto_estun").GetValue<bool>() && enemy.HasBuffOfType(BuffType.Stun))
                         Spells.CastSkillshot("E", enemy, HitChance.VeryHigh, true, false);
-                    if (Menu.Item("Auto_eslow").GetValue<bool>() && enemy.HasBuffOfType(BuffType.Slow))
+                    if (Menu.Item("Auto_eslow").GetValue<bool>() && enemy.HasBuffOfType(BuffType.Slow) && enemy.GetWaypoints().Count > 1)
                         Spells.CastSkillshot("E", enemy, HitChance.VeryHigh, true, false);
                 }
             }
