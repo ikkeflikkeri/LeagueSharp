@@ -59,6 +59,7 @@ namespace EasyJinx
             Menu.SubMenu("Harass").AddItem(new MenuItem("Harass_estacks", "# of stacks").SetValue(new Slider(4, 1, 10)));
             
             Menu.AddSubMenu(new Menu("Auto", "Auto"));
+            Menu.SubMenu("Auto").AddItem(new MenuItem("Auto_q", "Use Q").SetValue(false));
             Menu.SubMenu("Auto").AddItem(new MenuItem("Auto_ekill", "Use E on killable").SetValue(true));
             Menu.SubMenu("Auto").AddItem(new MenuItem("Auto_e", "Use E on # stacks").SetValue(false));
             Menu.SubMenu("Auto").AddItem(new MenuItem("Auto_estacks", "# of stacks").SetValue(new Slider(4, 1, 10)));
@@ -83,7 +84,7 @@ namespace EasyJinx
 
         protected override void Auto()
         {
-            
+            if (Menu.Item("Auto_q").GetValue<bool>()) CastQ();
         }
 
         protected override void Draw()
