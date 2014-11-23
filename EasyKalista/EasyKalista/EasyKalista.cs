@@ -140,7 +140,7 @@ namespace EasyJinx
 
             bool cast = true;
 
-            var collisions = Q.GetCollision(Player.Position.To2D(), new List<SharpDX.Vector2> { pred.CastPosition.To2D() })
+            var collisions = Q.GetCollision(Player.Position.To2D(), new List<SharpDX.Vector2> { pred.CastPosition.To2D() });
             foreach (var col in collisions.Where(x => x.IsMinion))
             {
                 if (col.Health > (float)Damage.GetSpellDamage(Player, col, SpellSlot.Q) * 0.9f)
