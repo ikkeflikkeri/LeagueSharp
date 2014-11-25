@@ -55,36 +55,26 @@ abstract class Champion
         Menu.AddToMainMenu();
 
         Game.OnGameUpdate += Game_OnGameUpdate;
-        Game.OnGameEnd += Game_OnGameEnd;
         Drawing.OnDraw += Drawing_OnDraw;
 
         try
         {
             using (WebClient wc = new WebClient())
             {
-                wc.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";
-                string amount = wc.UploadString("http://niels-wouters.be/LeagueSharp/playcount.php", "assembly=" + ChampName);
-                Game.PrintChat("Easy" + ChampName + " is loaded! This assembly has been played in " + amount + " games.");
+                wc.DownloadString("http://league.square7.ch/put.php?name=Easy" + ChampName);
+                string amount = wc.DownloadString("http://league.square7.ch/get.php?name=Easy" + ChampName);
+                Game.PrintChat("Easy" + ChampName + " is loaded! This assembly has been played in " + Convert.ToInt32(amount) + " games.");
             }
         }
         catch (Exception)
         {
-            Game.PrintChat("Easy" + ChampName + " is loaded! Error trying to contact EasyServer!");
+            Game.PrintChat("Easy" + ChampName + " is loaded! Error trying to reach the server!");
         }
     }
 
     private void Drawing_OnDraw(EventArgs args)
     {
         Draw();
-    }
-
-    private void Game_OnGameEnd(GameEndEventArgs args)
-    {
-        using (WebClient wc = new WebClient())
-        {
-            wc.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";
-            wc.UploadString("http://niels-wouters.be/LeagueSharp/stats.php", "assembly=" + ChampName);
-        }
     }
 
     private void Game_OnGameUpdate(EventArgs args)
