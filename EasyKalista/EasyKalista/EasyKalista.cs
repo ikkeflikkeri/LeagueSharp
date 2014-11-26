@@ -63,6 +63,7 @@ namespace EasyJinx
             Menu.SubMenu("Auto").AddItem(new MenuItem("Auto_ekill", "Use E on killable").SetValue(true));
             Menu.SubMenu("Auto").AddItem(new MenuItem("Auto_e", "Use E on # stacks").SetValue(false));
             Menu.SubMenu("Auto").AddItem(new MenuItem("Auto_estacks", "# of stacks").SetValue(new Slider(4, 1, 10)));
+            Menu.SubMenu("Auto").AddItem(new MenuItem("Auto_ejungle", "Use E for jungle steal").SetValue(true));
             
             Menu.AddSubMenu(new Menu("Drawing", "Drawing"));
             Menu.SubMenu("Drawing").AddItem(new MenuItem("Drawing_q", "Q Range").SetValue(new Circle(true, System.Drawing.Color.FromArgb(100, 0, 255, 0))));
@@ -103,12 +104,23 @@ namespace EasyJinx
 
             if (!E.IsReady()) return;
 
+            if (Menu.Item("Auto_ejungle").GetValue<bool>())
+            {
+                foreach (var min in MinionManager.GetMinions(Player.Position, E.Range, MinionTypes.All, MinionTeam.Neutral))
+                {
+                    if (min.SkinName.Contains("Mini")) continue;
+
+                    if ((float)Player.GetSpellDamage(min, SpellSlot.E) > min.Health)
+                        E.Cast();
+                }
+            }
+
             Obj_AI_Hero target = SimpleTs.GetTarget(E.Range, SimpleTs.DamageType.Physical);
             if (target == null) return;
             if (!target.HasBuff("KalistaExpungeMarker")) return;
 
             int stacks = target.Buffs.FirstOrDefault(x => x.DisplayName == "KalistaExpungeMarker").Count;
-            float damage = E.GetDamage(target) * stacks * 0.9f;
+            float damage = (float)Player.GetSpellDamage(target, SpellSlot.E);
 
             if (Menu.Item("Auto_ekill").GetValue<bool>())
             {
@@ -203,7 +215,7 @@ namespace EasyJinx
             var buff = hero.Buffs.FirstOrDefault(x => x.DisplayName == "KalistaExpungeMarker");
 
             if(buff != null)
-                return (float)(Damage.GetSpellDamage(Player, hero, SpellSlot.E) * buff.Count * 0.9f);
+                return (float)Player.GetSpellDamage(hero, SpellSlot.E);
             return 0f;
         }
     }
