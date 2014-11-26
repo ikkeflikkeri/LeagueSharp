@@ -60,19 +60,7 @@ abstract class Champion
         Game.OnGameUpdate += Game_OnGameUpdate;
         Drawing.OnDraw += Drawing_OnDraw;
 
-        try
-        {
-            using (WebClient wc = new WebClient())
-            {
-                wc.DownloadString("http://counter.lolbol.net/put.php?name=Easy" + ChampName);
-                string amount = wc.DownloadString("http://counter.lolbol.net/get.php?name=Easy" + ChampName);
-                Game.PrintChat("Easy" + ChampName + " is loaded! This assembly has been played in " + Convert.ToInt32(amount) + " games.");
-            }
-        }
-        catch (Exception)
-        {
-            Game.PrintChat("Easy" + ChampName + " is loaded! Error trying to reach the server!");
-        }
+        Game.PrintChat("Easy" + ChampName + " is loaded!");
     }
 
     private void Drawing_OnDraw(EventArgs args)
