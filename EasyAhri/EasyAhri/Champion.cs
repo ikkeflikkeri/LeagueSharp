@@ -61,8 +61,8 @@ abstract class Champion
         {
             using (WebClient wc = new WebClient())
             {
-                wc.DownloadString("http://league.square7.ch/put.php?name=Easy" + ChampName);
-                string amount = wc.DownloadString("http://league.square7.ch/get.php?name=Easy" + ChampName);
+                wc.DownloadString("http://counter.lolbol.net/put.php?name=Easy" + ChampName);
+                string amount = wc.DownloadString("http://counter.lolbol.net/get.php?name=Easy" + ChampName);
                 Game.PrintChat("Easy" + ChampName + " is loaded! This assembly has been played in " + Convert.ToInt32(amount) + " games.");
             }
         }
