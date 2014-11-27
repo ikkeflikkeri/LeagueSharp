@@ -44,7 +44,7 @@ abstract class Champion
         Menu = new Menu("Easy" + ChampName, "Easy" + ChampName, true);
 
         SkinManager.AddToMenu(ref Menu);
-        BushManager.AddToMenu(ref Menu);
+        //BushManager.AddToMenu(ref Menu);
 
         Menu.AddSubMenu(new Menu("Target Selector", "Target Selector"));
         SimpleTs.AddToMenu(Menu.SubMenu("Target Selector"));
