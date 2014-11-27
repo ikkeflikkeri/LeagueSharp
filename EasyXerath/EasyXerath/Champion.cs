@@ -18,6 +18,7 @@ abstract class Champion
     private int lastTick = Environment.TickCount;
     private string ChampName;
     private SkinManager SkinManager;
+    private BushManager BushManager;
 
     public Champion(string name)
     {
@@ -35,6 +36,7 @@ abstract class Champion
 
         SkinManager = new SkinManager();
         Spells = new SpellManager();
+        BushManager = new BushManager();
 
         InitializeSpells(ref Spells);
         InitializeSkins(ref SkinManager);
@@ -42,6 +44,7 @@ abstract class Champion
         Menu = new Menu("Easy" + ChampName, "Easy" + ChampName, true);
 
         SkinManager.AddToMenu(ref Menu);
+        BushManager.AddToMenu(ref Menu);
 
         Menu.AddSubMenu(new Menu("Target Selector", "Target Selector"));
         SimpleTs.AddToMenu(Menu.SubMenu("Target Selector"));
@@ -76,6 +79,8 @@ abstract class Champion
 
         if ((Menu.Item("Recall_block").GetValue<bool>() && Player.HasBuff("Recall")) || Player.IsWindingUp)
             return;
+
+        BushManager.Update(Orbwalker);
 
         bool minionBlock = false;
 

@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Release</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{92DD7322-C277-4CF5-83EF-DE1647125859}</ProjectGuid>
+    <ProjectGuid>{AD10545F-FF0F-47C0-99BE-B5360350832E}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>EasyXerath</RootNamespace>
@@ -54,6 +54,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BushManager.cs" />
     <Compile Include="Champion.cs" />
     <Compile Include="EasyXerath.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

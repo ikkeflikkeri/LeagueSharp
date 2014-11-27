@@ -16,9 +16,6 @@ namespace EasyXerath
             new EasyXerath();
         }
 
-        private Obj_AI_Hero RTarget = null;
-        private int RChange = 0;
-
         public EasyXerath() : base("Xerath")
         {
             Drawing.OnEndScene += Drawing_OnEndScene;
@@ -32,6 +29,7 @@ namespace EasyXerath
             Skins.Add("Battlecast Xerath");
             Skins.Add("Scorched Earth Xerath");
         }
+
         protected override void InitializeSpells(ref SpellManager Spells)
         {
             Spell Q = new Spell(SpellSlot.Q, 1600f);
@@ -56,6 +54,7 @@ namespace EasyXerath
             Spells.Add("E", E);
             Spells.Add("R", R);
         }
+
         protected override void InitializeMenu()
         {
             Menu.AddSubMenu(new Menu("Combo", "Combo"));
@@ -78,6 +77,7 @@ namespace EasyXerath
             Menu.SubMenu("Drawing").AddItem(new MenuItem("Drawing_w", "Use W").SetValue(new Circle(true, Color.FromArgb(100, 0, 255, 0))));
             Menu.SubMenu("Drawing").AddItem(new MenuItem("Drawing_e", "Use E").SetValue(new Circle(true, Color.FromArgb(100, 0, 255, 0))));
             Menu.SubMenu("Drawing").AddItem(new MenuItem("Drawing_r", "Use R").SetValue(new Circle(true, Color.FromArgb(100, 0, 255, 0))));
+            Menu.SubMenu("Drawing").AddItem(new MenuItem("Drawing_rmap", "Use R (minimap)").SetValue(true));
             Menu.SubMenu("Drawing").AddItem(new MenuItem("Drawing_rdamage", "R damage indicator").SetValue(true));
 
             Menu.AddSubMenu(new Menu("Misc", "Misc"));
@@ -85,18 +85,21 @@ namespace EasyXerath
             Menu.SubMenu("Misc").AddItem(new MenuItem("Misc_stun", "Use E").SetValue<KeyBind>(new KeyBind("T".ToCharArray()[0], KeyBindType.Press)));
             Menu.SubMenu("Misc").AddItem(new MenuItem("Misc_interrupt", "Use E to interrupt spells").SetValue(true));
             Menu.SubMenu("Misc").AddItem(new MenuItem("Misc_ult", "Use R when ult is activated").SetValue(true));
+            Menu.SubMenu("Misc").AddItem(new MenuItem("Misc_ulttime", "Max time between charges (ms)").SetValue(new Slider(1200, 600, 2000)));
+
+            Game.PrintChat("lol");
         }
 
         protected override void Combo()
         {
-            if (Menu.Item("Combo_w").GetValue<bool>()) 
+            if (Menu.Item("Combo_w").GetValue<bool>())
                 if (Menu.Item("Misc_wcenter").GetValue<bool>())
                     Spells.CastSkillshot("WCenter", SimpleTs.DamageType.Magical, HitChance.High);
                 else
                     Spells.CastSkillshot("W", SimpleTs.DamageType.Magical, HitChance.High);
 
             if (Menu.Item("Combo_e").GetValue<bool>()) Spells.CastSkillshot("E", SimpleTs.DamageType.Magical);
-            if (Menu.Item("Combo_q").GetValue<bool>()) Spells.CastSkillshot("Q", SimpleTs.DamageType.Magical);
+            if (Menu.Item("Combo_q").GetValue<bool>()) CastQ();
         }
         protected override void Harass()
         {
@@ -107,7 +110,7 @@ namespace EasyXerath
                     Spells.CastSkillshot("W", SimpleTs.DamageType.Magical, HitChance.High);
 
             if (Menu.Item("Harass_e").GetValue<bool>()) Spells.CastSkillshot("E", SimpleTs.DamageType.Magical);
-            if (Menu.Item("Harass_q").GetValue<bool>()) Spells.CastSkillshot("Q", SimpleTs.DamageType.Magical);
+            if (Menu.Item("Harass_q").GetValue<bool>()) CastQ();
         }
         protected override void Auto()
         {
@@ -120,18 +123,12 @@ namespace EasyXerath
                     Spells.CastSkillshot("W", SimpleTs.DamageType.Magical, HitChance.High);
 
             if (Menu.Item("Auto_e").GetValue<bool>()) Spells.CastSkillshot("E", SimpleTs.DamageType.Magical);
-            if (Menu.Item("Auto_q").GetValue<bool>()) Spells.CastSkillshot("Q", SimpleTs.DamageType.Magical);
+            if (Menu.Item("Auto_q").GetValue<bool>()) CastQ();
 
-            if (Menu.Item("Misc_ult").GetValue<bool>() && Player.HasBuff("XerathR"))
-            {
-                Console.WriteLine("Ultimate");
+            if (Menu.Item("Misc_ult").GetValue<bool>() && (Player.HasBuff("XerathLocusOfPower2", true) || (Player.LastCastedSpellName() == "XerathLocusOfPower2")))
                 CastR();
-            }
             else
-            {
                 RTarget = null;
-                RChange = 0;
-            }
         }
 
         protected override void Draw()
@@ -150,46 +147,60 @@ namespace EasyXerath
                 Spells.get("R").Range = 1750 + Spells.get("R").Level * 1200;
         }
 
+        private void CastQ()
+        {
+            Spell Q = Spells.get("Q");
+
+            if (!Q.IsReady()) return;
+
+            Obj_AI_Hero target = SimpleTs.GetTarget(Q.ChargedMaxRange, SimpleTs.DamageType.Magical);
+            if (target == null || !target.IsValidTarget(Q.ChargedMaxRange))
+                return;
+
+            if (!Q.IsCharging)
+                Q.StartCharging();
+            else
+            {
+                if (Q.Range - Q.ChargedMaxRange * 0.2f > ObjectManager.Player.Distance(target) && Q.GetPrediction(target).Hitchance >= HitChance.High)
+                    Q.Cast(target, true, false);
+                if (Q.GetPrediction(target).Hitchance >= HitChance.VeryHigh)
+                    Q.Cast(target, true, false);
+            }
+        }
+
+        private Obj_AI_Hero RTarget = null;
+
         private void CastR()
         {
             Spell R = Spells.get("R");
 
             Obj_AI_Hero target = SimpleTs.GetTarget(R.Range, SimpleTs.DamageType.Magical);
             if (target == null) return;
+            if (!target.IsValidTarget(R.Range)) return;
 
-            Console.WriteLine("CastR");
-
-            if(RTarget != null && target.Position != RTarget.Position)
+            if (RTarget != null && target.Position != RTarget.Position)
             {
-                Console.WriteLine("CastR3 - " + RTarget.Distance(target) / 2.5f);
-
-                if (Environment.TickCount < RChange + (int)(RTarget.Distance(target) / 2.5f))
-                {
-                    Console.WriteLine("Wait");
+                if (Environment.TickCount - Player.LastCastedSpellT() < (int)(RTarget.Distance(target) / 2.5f))
                     return;
-                }
             }
-            Console.WriteLine("Cast");
 
-            if (target.IsValidTarget(R.Range) && R.GetPrediction(target).Hitchance >= HitChance.VeryHigh)
+            if (Environment.TickCount - Player.LastCastedSpellT() > 600 && R.GetPrediction(target).Hitchance >= HitChance.VeryHigh)
             {
                 R.Cast(target, true);
                 RTarget = target;
-                RChange = Environment.TickCount + 600;
+            }
+            else if (Environment.TickCount - Player.LastCastedSpellT() >= Menu.Item("Misc_ulttime").GetValue<Slider>().Value && R.GetPrediction(target).Hitchance >= HitChance.High)
+            {
+                R.Cast(target, true);
+                RTarget = target;
             }
         }
 
         private float UltimateDamage(Obj_AI_Hero hero)
         {
-            if(Spells.get("R").Level > 0)
-                return (float)Damage.GetSpellDamage(Player, hero, SpellSlot.R) * 2.95f;
+            if (Spells.get("R").Level > 0)
+                return (float)Player.GetSpellDamage(hero, SpellSlot.R) * 3f;
             return 0f;
-        }
-
-        private void Drawing_OnEndScene(EventArgs args)
-        {
-            if (Menu.Item("Drawing_r").GetValue<bool>())
-                Utility.DrawCircle(Player.Position, Spells.get("R").Range, Color.FromArgb(255, 255, 255), 1, 30, true);
         }
 
         private void Interrupter_OnPossibleToInterrupt(Obj_AI_Base unit, InterruptableSpell spell)
@@ -197,9 +208,15 @@ namespace EasyXerath
             if (Menu.Item("Misc_interrupt").GetValue<bool>())
             {
                 Spell E = Spells.get("E");
-                if (ObjectManager.Player.Distance(unit) < E.Range && E.IsReady() && unit.IsEnemy)
+                if (Player.Distance(unit) < E.Range && E.IsReady() && unit.IsEnemy)
                     Spells.CastSkillshot("E", unit, HitChance.High);
             }
+        }
+
+        private void Drawing_OnEndScene(EventArgs args)
+        {
+            if (Menu.Item("Drawing_rmap").GetValue<bool>())
+                Utility.DrawCircle(Player.Position, Spells.get("R").Range, Color.FromArgb(255, 255, 255), 2, 30, true);
         }
     }
 }
