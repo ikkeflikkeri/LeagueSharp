@@ -127,7 +127,7 @@ namespace EasyRyze
         {
             Orbwalker.SetAttack(!(Orbwalker.ActiveMode == Orbwalking.OrbwalkingMode.Combo && (Spells.get("Q").IsReady() || Spells.get("W").IsReady() || Spells.get("E").IsReady())));
 
-            if (Menu.Item("Auto_r").GetValue<Slider>().Value <= Utility.CountEnemysInRange((int)Spells.get("R").Range, Player))
+            if (Menu.Item("Auto_r").GetValue<Slider>().Value <= Utility.CountEnemysInRange(Player, (int)Spells.get("R").Range))
                 Spells.get("R").Cast();
         }
 
