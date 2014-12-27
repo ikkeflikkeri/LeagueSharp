@@ -75,18 +75,18 @@ namespace EasyEzreal
 
         protected override void Combo()
         {
-            if (Menu.Item("Combo_q").GetValue<bool>()) Spells.CastSkillshot("Q", SimpleTs.DamageType.Physical, HitChance.High);
-            if (Menu.Item("Combo_w").GetValue<bool>()) Spells.CastSkillshot("W", SimpleTs.DamageType.Magical, HitChance.High);
+            if (Menu.Item("Combo_q").GetValue<bool>()) Spells.CastSkillshot("Q", TargetSelector.DamageType.Physical, HitChance.High);
+            if (Menu.Item("Combo_w").GetValue<bool>()) Spells.CastSkillshot("W", TargetSelector.DamageType.Magical, HitChance.High);
         }
         protected override void Harass()
         {
-            if (Menu.Item("Harass_q").GetValue<bool>()) Spells.CastSkillshot("Q", SimpleTs.DamageType.Physical);
-            if (Menu.Item("Harass_w").GetValue<bool>()) Spells.CastSkillshot("W", SimpleTs.DamageType.Magical);
+            if (Menu.Item("Harass_q").GetValue<bool>()) Spells.CastSkillshot("Q", TargetSelector.DamageType.Physical);
+            if (Menu.Item("Harass_w").GetValue<bool>()) Spells.CastSkillshot("W", TargetSelector.DamageType.Magical);
         }
         protected override void Auto()
         {
-            if (Menu.Item("Auto_q").GetValue<bool>() && !(Menu.Item("Auto_manaE").GetValue<bool>() && Player.Spellbook.GetSpell(SpellSlot.E).Level >= 1 && Player.Mana < Player.Spellbook.GetSpell(SpellSlot.E).ManaCost + Player.Spellbook.GetSpell(SpellSlot.Q).ManaCost)) Spells.CastSkillshot("Q", SimpleTs.DamageType.Physical);
-            if (Menu.Item("Auto_w").GetValue<bool>() && !(Menu.Item("Auto_manaE").GetValue<bool>() && Player.Spellbook.GetSpell(SpellSlot.E).Level >= 1 && Player.Mana < Player.Spellbook.GetSpell(SpellSlot.E).ManaCost + Player.Spellbook.GetSpell(SpellSlot.W).ManaCost)) Spells.CastSkillshot("W", SimpleTs.DamageType.Magical);
+            if (Menu.Item("Auto_q").GetValue<bool>() && !(Menu.Item("Auto_manaE").GetValue<bool>() && Player.Spellbook.GetSpell(SpellSlot.E).Level >= 1 && Player.Mana < Player.Spellbook.GetSpell(SpellSlot.E).ManaCost + Player.Spellbook.GetSpell(SpellSlot.Q).ManaCost)) Spells.CastSkillshot("Q", TargetSelector.DamageType.Physical);
+            if (Menu.Item("Auto_w").GetValue<bool>() && !(Menu.Item("Auto_manaE").GetValue<bool>() && Player.Spellbook.GetSpell(SpellSlot.E).Level >= 1 && Player.Mana < Player.Spellbook.GetSpell(SpellSlot.E).ManaCost + Player.Spellbook.GetSpell(SpellSlot.W).ManaCost)) Spells.CastSkillshot("W", TargetSelector.DamageType.Magical);
         }
 
         protected override void Draw()
@@ -108,7 +108,7 @@ namespace EasyEzreal
 
             if (!R.IsReady()) return;
 
-            Obj_AI_Hero target = SimpleTs.GetTarget(Menu.Item("Auto_maxrange").GetValue<Slider>().Value, SimpleTs.DamageType.Magical);
+            Obj_AI_Hero target = TargetSelector.GetTarget(Menu.Item("Auto_maxrange").GetValue<Slider>().Value, TargetSelector.DamageType.Magical);
             if (target == null || Player.Distance(target) < Menu.Item("Auto_minrange").GetValue<Slider>().Value) return;
 
             float predictedHealth = HealthPrediction.GetHealthPrediction(target, (int)(R.Delay + (Player.Distance(target) / R.Speed) * 1000));

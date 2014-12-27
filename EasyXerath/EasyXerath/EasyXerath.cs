@@ -94,35 +94,35 @@ namespace EasyXerath
         {
             if (Menu.Item("Combo_w").GetValue<bool>())
                 if (Menu.Item("Misc_wcenter").GetValue<bool>())
-                    Spells.CastSkillshot("WCenter", SimpleTs.DamageType.Magical, HitChance.High);
+                    Spells.CastSkillshot("WCenter", TargetSelector.DamageType.Magical, HitChance.High);
                 else
-                    Spells.CastSkillshot("W", SimpleTs.DamageType.Magical, HitChance.High);
+                    Spells.CastSkillshot("W", TargetSelector.DamageType.Magical, HitChance.High);
 
-            if (Menu.Item("Combo_e").GetValue<bool>()) Spells.CastSkillshot("E", SimpleTs.DamageType.Magical);
+            if (Menu.Item("Combo_e").GetValue<bool>()) Spells.CastSkillshot("E", TargetSelector.DamageType.Magical);
             if (Menu.Item("Combo_q").GetValue<bool>()) CastQ();
         }
         protected override void Harass()
         {
             if (Menu.Item("Harass_w").GetValue<bool>())
                 if (Menu.Item("Misc_wcenter").GetValue<bool>())
-                    Spells.CastSkillshot("WCenter", SimpleTs.DamageType.Magical, HitChance.High);
+                    Spells.CastSkillshot("WCenter", TargetSelector.DamageType.Magical, HitChance.High);
                 else
-                    Spells.CastSkillshot("W", SimpleTs.DamageType.Magical, HitChance.High);
+                    Spells.CastSkillshot("W", TargetSelector.DamageType.Magical, HitChance.High);
 
-            if (Menu.Item("Harass_e").GetValue<bool>()) Spells.CastSkillshot("E", SimpleTs.DamageType.Magical);
+            if (Menu.Item("Harass_e").GetValue<bool>()) Spells.CastSkillshot("E", TargetSelector.DamageType.Magical);
             if (Menu.Item("Harass_q").GetValue<bool>()) CastQ();
         }
         protected override void Auto()
         {
-            if (Menu.Item("Misc_stun").GetValue<KeyBind>().Active) Spells.CastSkillshot("E", SimpleTs.DamageType.Magical);
+            if (Menu.Item("Misc_stun").GetValue<KeyBind>().Active) Spells.CastSkillshot("E", TargetSelector.DamageType.Magical);
 
             if (Menu.Item("Auto_w").GetValue<bool>())
                 if (Menu.Item("Misc_wcenter").GetValue<bool>())
-                    Spells.CastSkillshot("WCenter", SimpleTs.DamageType.Magical, HitChance.High);
+                    Spells.CastSkillshot("WCenter", TargetSelector.DamageType.Magical, HitChance.High);
                 else
-                    Spells.CastSkillshot("W", SimpleTs.DamageType.Magical, HitChance.High);
+                    Spells.CastSkillshot("W", TargetSelector.DamageType.Magical, HitChance.High);
 
-            if (Menu.Item("Auto_e").GetValue<bool>()) Spells.CastSkillshot("E", SimpleTs.DamageType.Magical);
+            if (Menu.Item("Auto_e").GetValue<bool>()) Spells.CastSkillshot("E", TargetSelector.DamageType.Magical);
             if (Menu.Item("Auto_q").GetValue<bool>()) CastQ();
 
             if (Menu.Item("Misc_ult").GetValue<bool>() && (Player.HasBuff("XerathLocusOfPower2", true) || (Player.LastCastedSpellName() == "XerathLocusOfPower2")))
@@ -153,7 +153,7 @@ namespace EasyXerath
 
             if (!Q.IsReady()) return;
 
-            Obj_AI_Hero target = SimpleTs.GetTarget(Q.ChargedMaxRange, SimpleTs.DamageType.Magical);
+            Obj_AI_Hero target = TargetSelector.GetTarget(Q.ChargedMaxRange, TargetSelector.DamageType.Magical);
             if (target == null || !target.IsValidTarget(Q.ChargedMaxRange))
                 return;
 
@@ -174,7 +174,7 @@ namespace EasyXerath
         {
             Spell R = Spells.get("R");
 
-            Obj_AI_Hero target = SimpleTs.GetTarget(R.Range, SimpleTs.DamageType.Magical);
+            Obj_AI_Hero target = TargetSelector.GetTarget(R.Range, TargetSelector.DamageType.Magical);
             if (target == null) return;
             if (!target.IsValidTarget(R.Range)) return;
 

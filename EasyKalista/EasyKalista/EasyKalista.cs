@@ -115,7 +115,7 @@ namespace EasyJinx
                 }
             }
 
-            Obj_AI_Hero target = SimpleTs.GetTarget(E.Range, SimpleTs.DamageType.Physical);
+            Obj_AI_Hero target = TargetSelector.GetTarget(E.Range, TargetSelector.DamageType.Physical);
             if (target == null) return;
             if (!target.HasBuff("KalistaExpungeMarker")) return;
 
@@ -143,7 +143,7 @@ namespace EasyJinx
             
             if (!Q.IsReady()) return;
 
-            var target = SimpleTs.GetTarget(Q.Range, SimpleTs.DamageType.Physical);
+            var target = TargetSelector.GetTarget(Q.Range, TargetSelector.DamageType.Physical);
             if (target == null) return;
 
             PredictionOutput pred = Q.GetPrediction(target, false);
@@ -170,7 +170,7 @@ namespace EasyJinx
 
             if (!E.IsReady()) return;
 
-            Obj_AI_Hero target = SimpleTs.GetTarget(E.Range, SimpleTs.DamageType.Physical);
+            Obj_AI_Hero target = TargetSelector.GetTarget(E.Range, TargetSelector.DamageType.Physical);
             if (target == null) return;
             if (!target.HasBuff("KalistaExpungeMarker")) return;
 
@@ -197,7 +197,7 @@ namespace EasyJinx
 
             if (!E.IsReady()) return;
 
-            Obj_AI_Hero target = SimpleTs.GetTarget(E.Range, SimpleTs.DamageType.Physical);
+            Obj_AI_Hero target = TargetSelector.GetTarget(E.Range, TargetSelector.DamageType.Physical);
             if (target == null) return;
             if (!target.HasBuff("KalistaExpungeMarker")) return;
 

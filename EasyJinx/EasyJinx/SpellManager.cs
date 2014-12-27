@@ -32,11 +32,11 @@ class SpellManager
         if (target.IsValidTarget(Spells[spell].Range) && Spells[spell].GetPrediction(target).Hitchance >= hitChance)
             Spells[spell].Cast(target, packet, aoe);
     }
-    public void CastSkillshot(string spell, SimpleTs.DamageType damageType, HitChance hitChance = HitChance.VeryHigh, bool packet = true, bool aoe = false)
+    public void CastSkillshot(string spell, TargetSelector.DamageType damageType, HitChance hitChance = HitChance.VeryHigh, bool packet = true, bool aoe = false)
     {
         if (!Spells[spell].IsReady()) return;
 
-        Obj_AI_Hero target = SimpleTs.GetTarget(Spells[spell].Range, damageType);
+        Obj_AI_Hero target = TargetSelector.GetTarget(Spells[spell].Range, damageType);
         if (target == null) return;
 
         if (target.IsValidTarget(Spells[spell].Range) && Spells[spell].GetPrediction(target).Hitchance >= hitChance)
@@ -49,11 +49,11 @@ class SpellManager
         if (target.IsValidTarget(Spells[spell].Range))
             Spells[spell].CastOnUnit(target, packet);
     }
-    public void CastOnTarget(string spell, SimpleTs.DamageType damageType, bool packet = true)
+    public void CastOnTarget(string spell, TargetSelector.DamageType damageType, bool packet = true)
     {
         if (!Spells[spell].IsReady()) return;
 
-        Obj_AI_Hero target = SimpleTs.GetTarget(Spells[spell].Range, damageType);
+        Obj_AI_Hero target = TargetSelector.GetTarget(Spells[spell].Range, damageType);
         if (target == null) return;
 
         if (target.IsValidTarget(Spells[spell].Range))

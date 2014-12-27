@@ -78,21 +78,21 @@ namespace EasyCorki
 
         protected override void Combo()
         {
-            if (Menu.Item("Combo_q").GetValue<bool>()) Spells.CastSkillshot("Q", SimpleTs.DamageType.Magical, HitChance.VeryHigh, true, true);
-            if (Menu.Item("Combo_e").GetValue<bool>()) Spells.CastSkillshot("E", SimpleTs.DamageType.Physical);
-            if (Menu.Item("Combo_r").GetValue<bool>()) Spells.CastSkillshot("R", SimpleTs.DamageType.Magical);
+            if (Menu.Item("Combo_q").GetValue<bool>()) Spells.CastSkillshot("Q", TargetSelector.DamageType.Magical, HitChance.VeryHigh, true, true);
+            if (Menu.Item("Combo_e").GetValue<bool>()) Spells.CastSkillshot("E", TargetSelector.DamageType.Physical);
+            if (Menu.Item("Combo_r").GetValue<bool>()) Spells.CastSkillshot("R", TargetSelector.DamageType.Magical);
         }
         protected override void Harass()
         {
-            if (Menu.Item("Harass_q").GetValue<bool>()) Spells.CastSkillshot("Q", SimpleTs.DamageType.Magical, HitChance.VeryHigh, true, true);
-            if (Menu.Item("Harass_e").GetValue<bool>()) Spells.CastSkillshot("E", SimpleTs.DamageType.Physical);
-            if (Menu.Item("Harass_r").GetValue<bool>() && missiles() > Menu.Item("Harass_rlimit").GetValue<Slider>().Value) Spells.CastSkillshot("R", SimpleTs.DamageType.Magical);
+            if (Menu.Item("Harass_q").GetValue<bool>()) Spells.CastSkillshot("Q", TargetSelector.DamageType.Magical, HitChance.VeryHigh, true, true);
+            if (Menu.Item("Harass_e").GetValue<bool>()) Spells.CastSkillshot("E", TargetSelector.DamageType.Physical);
+            if (Menu.Item("Harass_r").GetValue<bool>() && missiles() > Menu.Item("Harass_rlimit").GetValue<Slider>().Value) Spells.CastSkillshot("R", TargetSelector.DamageType.Magical);
         }
         protected override void Auto()
         {
-            if (Menu.Item("Auto_q").GetValue<bool>()) Spells.CastSkillshot("Q", SimpleTs.DamageType.Magical, HitChance.VeryHigh, true, true);
-            if (Menu.Item("Auto_e").GetValue<bool>()) Spells.CastSkillshot("E", SimpleTs.DamageType.Physical);
-            if (Menu.Item("Auto_r").GetValue<bool>() && missiles() > Menu.Item("Auto_rlimit").GetValue<Slider>().Value) Spells.CastSkillshot("R", SimpleTs.DamageType.Magical);
+            if (Menu.Item("Auto_q").GetValue<bool>()) Spells.CastSkillshot("Q", TargetSelector.DamageType.Magical, HitChance.VeryHigh, true, true);
+            if (Menu.Item("Auto_e").GetValue<bool>()) Spells.CastSkillshot("E", TargetSelector.DamageType.Physical);
+            if (Menu.Item("Auto_r").GetValue<bool>() && missiles() > Menu.Item("Auto_rlimit").GetValue<Slider>().Value) Spells.CastSkillshot("R", TargetSelector.DamageType.Magical);
         }
 
         protected override void Draw()

@@ -88,24 +88,24 @@ namespace EasyKogMaw
 
         protected override void Combo()
         {
-            if (Menu.Item("Combo_q").GetValue<bool>()) Spells.CastSkillshot("Q", SimpleTs.DamageType.Magical, HitChance.High);
+            if (Menu.Item("Combo_q").GetValue<bool>()) Spells.CastSkillshot("Q", TargetSelector.DamageType.Magical, HitChance.High);
             if (Menu.Item("Combo_w").GetValue<bool>()) CastW();
-            if (Menu.Item("Combo_e").GetValue<bool>()) Spells.CastSkillshot("E", SimpleTs.DamageType.Magical);
-            if (Menu.Item("Combo_r").GetValue<bool>() && GetRStacks() < Menu.Item("Combo_maxrstacks").GetValue<Slider>().Value) Spells.CastSkillshot("R", SimpleTs.DamageType.Magical);
+            if (Menu.Item("Combo_e").GetValue<bool>()) Spells.CastSkillshot("E", TargetSelector.DamageType.Magical);
+            if (Menu.Item("Combo_r").GetValue<bool>() && GetRStacks() < Menu.Item("Combo_maxrstacks").GetValue<Slider>().Value) Spells.CastSkillshot("R", TargetSelector.DamageType.Magical);
         }
         protected override void Harass()
         {
-            if (Menu.Item("Harass_q").GetValue<bool>()) Spells.CastSkillshot("Q", SimpleTs.DamageType.Magical);
+            if (Menu.Item("Harass_q").GetValue<bool>()) Spells.CastSkillshot("Q", TargetSelector.DamageType.Magical);
             if (Menu.Item("Harass_w").GetValue<bool>()) CastW();
-            if (Menu.Item("Harass_e").GetValue<bool>()) Spells.CastSkillshot("E", SimpleTs.DamageType.Magical);
-            if (Menu.Item("Harass_r").GetValue<bool>() && GetRStacks() < Menu.Item("Harass_maxrstacks").GetValue<Slider>().Value) Spells.CastSkillshot("R", SimpleTs.DamageType.Magical);
+            if (Menu.Item("Harass_e").GetValue<bool>()) Spells.CastSkillshot("E", TargetSelector.DamageType.Magical);
+            if (Menu.Item("Harass_r").GetValue<bool>() && GetRStacks() < Menu.Item("Harass_maxrstacks").GetValue<Slider>().Value) Spells.CastSkillshot("R", TargetSelector.DamageType.Magical);
         }
         protected override void Auto()
         {
-            if (Menu.Item("Auto_q").GetValue<bool>()) Spells.CastSkillshot("Q", SimpleTs.DamageType.Magical);
+            if (Menu.Item("Auto_q").GetValue<bool>()) Spells.CastSkillshot("Q", TargetSelector.DamageType.Magical);
             if (Menu.Item("Auto_w").GetValue<bool>()) CastW();
-            if (Menu.Item("Auto_e").GetValue<bool>()) Spells.CastSkillshot("E", SimpleTs.DamageType.Magical);
-            if (Menu.Item("Auto_r").GetValue<bool>() && GetRStacks() < Menu.Item("Auto_maxrstacks").GetValue<Slider>().Value) Spells.CastSkillshot("R", SimpleTs.DamageType.Magical);
+            if (Menu.Item("Auto_e").GetValue<bool>()) Spells.CastSkillshot("E", TargetSelector.DamageType.Magical);
+            if (Menu.Item("Auto_r").GetValue<bool>() && GetRStacks() < Menu.Item("Auto_maxrstacks").GetValue<Slider>().Value) Spells.CastSkillshot("R", TargetSelector.DamageType.Magical);
         }
         protected override void Draw()
         {
@@ -175,7 +175,7 @@ namespace EasyKogMaw
         {
             if (!Spells.get("W").IsReady()) return;
 
-            Obj_AI_Hero target = SimpleTs.GetTarget(Spells.get("W").Range + Player.AttackRange, SimpleTs.DamageType.Magical);
+            Obj_AI_Hero target = TargetSelector.GetTarget(Spells.get("W").Range + Player.AttackRange, TargetSelector.DamageType.Magical);
             if (target == null) return;
 
             Spells.get("W").Cast();

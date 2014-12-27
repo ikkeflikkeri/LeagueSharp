@@ -96,7 +96,7 @@ namespace EasyJinx
             Spell E = Spells.get("E");
             if (!E.IsReady()) return;
 
-            Obj_AI_Hero target = SimpleTs.GetTarget(E.Range, SimpleTs.DamageType.Physical);
+            Obj_AI_Hero target = TargetSelector.GetTarget(E.Range, TargetSelector.DamageType.Physical);
             if (target == null) return;
             if (target.GetWaypoints().Count == 1) return;
 
@@ -149,7 +149,7 @@ namespace EasyJinx
             Spell Q = Spells.get("Q");
             if (!Q.IsReady()) return;
 
-            Obj_AI_Hero target = SimpleTs.GetTarget(Q.Range, SimpleTs.DamageType.Physical);
+            Obj_AI_Hero target = TargetSelector.GetTarget(Q.Range, TargetSelector.DamageType.Physical);
             if (target == null) return;
 
             float distance = Player.Position.Distance(target.Position);
@@ -169,7 +169,7 @@ namespace EasyJinx
             Spell W = Spells.get("W");
             if (!W.IsReady()) return;
 
-            Obj_AI_Hero target = SimpleTs.GetTarget(W.Range, SimpleTs.DamageType.Physical);
+            Obj_AI_Hero target = TargetSelector.GetTarget(W.Range, TargetSelector.DamageType.Physical);
             if (target == null) return;
 
             float distance = Player.Position.Distance(target.Position);
@@ -184,7 +184,7 @@ namespace EasyJinx
 
             if (!R.IsReady()) return;
 
-            Obj_AI_Hero target = SimpleTs.GetTarget(Menu.Item("Auto_maxrange").GetValue<Slider>().Value, SimpleTs.DamageType.Physical);
+            Obj_AI_Hero target = TargetSelector.GetTarget(Menu.Item("Auto_maxrange").GetValue<Slider>().Value, TargetSelector.DamageType.Physical);
             if (target == null || Player.Distance(target) < Menu.Item("Auto_minrange").GetValue<Slider>().Value) return;
 
             float predictedHealth = HealthPrediction.GetHealthPrediction(target, (int)(R.Delay + (Player.Distance(target) / R.Speed) * 1000));

@@ -84,34 +84,34 @@ namespace EasyRyze
             {
                 if (Spells.get("W").IsReady())
                 {
-                    Obj_AI_Hero target = SimpleTs.GetTarget(Spells.get("Q").Range, SimpleTs.DamageType.Magical);
-                    if (target.Distance(Player) < 200) Spells.CastOnTarget("E", SimpleTs.DamageType.Magical, Menu.Item("Combo_packet").GetValue<bool>());
-                    else if (target.Distance(Player) < Spells.get("W").Range - 100) Spells.CastOnTarget("Q", SimpleTs.DamageType.Magical, Menu.Item("Combo_packet").GetValue<bool>());
+                    Obj_AI_Hero target = TargetSelector.GetTarget(Spells.get("Q").Range, TargetSelector.DamageType.Magical);
+                    if (target.Distance(Player) < 200) Spells.CastOnTarget("E", TargetSelector.DamageType.Magical, Menu.Item("Combo_packet").GetValue<bool>());
+                    else if (target.Distance(Player) < Spells.get("W").Range - 100) Spells.CastOnTarget("Q", TargetSelector.DamageType.Magical, Menu.Item("Combo_packet").GetValue<bool>());
                     else if (target.Distance(Player) > Spells.get("W").Range)
                     {
                         if (Damage.GetSpellDamage(Player, target, SpellSlot.Q) >= target.Health)
-                            Spells.CastOnTarget("Q", SimpleTs.DamageType.Magical, Menu.Item("Combo_packet").GetValue<bool>());
+                            Spells.CastOnTarget("Q", TargetSelector.DamageType.Magical, Menu.Item("Combo_packet").GetValue<bool>());
                         else
                             return;
                     }
                 }
             }
 
-            if (Menu.Item("Combo_w").GetValue<bool>()) Spells.CastOnTarget("W", SimpleTs.DamageType.Magical, Menu.Item("Combo_packet").GetValue<bool>());
-            if (Menu.Item("Combo_q").GetValue<bool>()) Spells.CastOnTarget("Q", SimpleTs.DamageType.Magical, Menu.Item("Combo_packet").GetValue<bool>());
-            if (Menu.Item("Combo_e").GetValue<bool>()) Spells.CastOnTarget("E", SimpleTs.DamageType.Magical, Menu.Item("Combo_packet").GetValue<bool>());
+            if (Menu.Item("Combo_w").GetValue<bool>()) Spells.CastOnTarget("W", TargetSelector.DamageType.Magical, Menu.Item("Combo_packet").GetValue<bool>());
+            if (Menu.Item("Combo_q").GetValue<bool>()) Spells.CastOnTarget("Q", TargetSelector.DamageType.Magical, Menu.Item("Combo_packet").GetValue<bool>());
+            if (Menu.Item("Combo_e").GetValue<bool>()) Spells.CastOnTarget("E", TargetSelector.DamageType.Magical, Menu.Item("Combo_packet").GetValue<bool>());
         }
         protected override void Harass()
         {
-            if (Menu.Item("Harass_w").GetValue<bool>()) Spells.CastOnTarget("W", SimpleTs.DamageType.Magical, Menu.Item("Harass_packet").GetValue<bool>());
-            if (Menu.Item("Harass_q").GetValue<bool>()) Spells.CastOnTarget("Q", SimpleTs.DamageType.Magical, Menu.Item("Harass_packet").GetValue<bool>());
-            if (Menu.Item("Harass_e").GetValue<bool>()) Spells.CastOnTarget("E", SimpleTs.DamageType.Magical, Menu.Item("Harass_packet").GetValue<bool>());
+            if (Menu.Item("Harass_w").GetValue<bool>()) Spells.CastOnTarget("W", TargetSelector.DamageType.Magical, Menu.Item("Harass_packet").GetValue<bool>());
+            if (Menu.Item("Harass_q").GetValue<bool>()) Spells.CastOnTarget("Q", TargetSelector.DamageType.Magical, Menu.Item("Harass_packet").GetValue<bool>());
+            if (Menu.Item("Harass_e").GetValue<bool>()) Spells.CastOnTarget("E", TargetSelector.DamageType.Magical, Menu.Item("Harass_packet").GetValue<bool>());
         }
         protected override void Auto()
         {
-            if (Menu.Item("Auto_w").GetValue<bool>()) Spells.CastOnTarget("W", SimpleTs.DamageType.Magical, Menu.Item("Auto_packet").GetValue<bool>());
-            if (Menu.Item("Auto_q").GetValue<bool>()) Spells.CastOnTarget("Q", SimpleTs.DamageType.Magical, Menu.Item("Auto_packet").GetValue<bool>());
-            if (Menu.Item("Auto_e").GetValue<bool>()) Spells.CastOnTarget("E", SimpleTs.DamageType.Magical, Menu.Item("Auto_packet").GetValue<bool>());
+            if (Menu.Item("Auto_w").GetValue<bool>()) Spells.CastOnTarget("W", TargetSelector.DamageType.Magical, Menu.Item("Auto_packet").GetValue<bool>());
+            if (Menu.Item("Auto_q").GetValue<bool>()) Spells.CastOnTarget("Q", TargetSelector.DamageType.Magical, Menu.Item("Auto_packet").GetValue<bool>());
+            if (Menu.Item("Auto_e").GetValue<bool>()) Spells.CastOnTarget("E", TargetSelector.DamageType.Magical, Menu.Item("Auto_packet").GetValue<bool>());
         }
 
         protected override void Draw()
@@ -150,7 +150,7 @@ namespace EasyRyze
         {
             if (!Spells.get("R").IsReady()) return;
 
-            Obj_AI_Hero target = SimpleTs.GetTarget(Spells.get("R").Range, SimpleTs.DamageType.Magical);
+            Obj_AI_Hero target = TargetSelector.GetTarget(Spells.get("R").Range, TargetSelector.DamageType.Magical);
             if (target == null) return;
             if (ComboDamage(target) < target.Health) return;
 

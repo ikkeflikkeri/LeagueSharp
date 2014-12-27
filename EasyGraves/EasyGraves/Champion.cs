@@ -47,7 +47,7 @@ abstract class Champion
         BushManager.AddToMenu(ref Menu);
 
         Menu.AddSubMenu(new Menu("Target Selector", "Target Selector"));
-        SimpleTs.AddToMenu(Menu.SubMenu("Target Selector"));
+        TargetSelector.AddToMenu(Menu.SubMenu("Target Selector"));
 
         Menu.AddSubMenu(new Menu("Orbwalker", "Orbwalker"));
         Orbwalker = new Orbwalking.Orbwalker(Menu.SubMenu("Orbwalker"));

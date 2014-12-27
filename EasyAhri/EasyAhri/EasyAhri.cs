@@ -77,20 +77,20 @@ namespace EasyAhri
 
         protected override void Combo()
         {
-            if (Menu.Item("Combo_e").GetValue<bool>()) Spells.CastSkillshot("E", SimpleTs.DamageType.Magical);
-            if (Menu.Item("Combo_q").GetValue<bool>()) Spells.CastSkillshot("Q", SimpleTs.DamageType.Magical, HitChance.High);
+            if (Menu.Item("Combo_e").GetValue<bool>()) Spells.CastSkillshot("E", TargetSelector.DamageType.Magical);
+            if (Menu.Item("Combo_q").GetValue<bool>()) Spells.CastSkillshot("Q", TargetSelector.DamageType.Magical, HitChance.High);
             if (Menu.Item("Combo_w").GetValue<bool>()) CastW();
         }
         protected override void Harass()
         {
-            if (Menu.Item("Harass_e").GetValue<bool>()) Spells.CastSkillshot("E", SimpleTs.DamageType.Magical);
-            if (Menu.Item("Harass_q").GetValue<bool>()) Spells.CastSkillshot("Q", SimpleTs.DamageType.Magical);
+            if (Menu.Item("Harass_e").GetValue<bool>()) Spells.CastSkillshot("E", TargetSelector.DamageType.Magical);
+            if (Menu.Item("Harass_q").GetValue<bool>()) Spells.CastSkillshot("Q", TargetSelector.DamageType.Magical);
             if (Menu.Item("Harass_w").GetValue<bool>()) CastW();
         }
         protected override void Auto()
         {
-            if (Menu.Item("Auto_e").GetValue<bool>()) Spells.CastSkillshot("E", SimpleTs.DamageType.Magical);
-            if (Menu.Item("Auto_q").GetValue<bool>()) Spells.CastSkillshot("Q", SimpleTs.DamageType.Magical);
+            if (Menu.Item("Auto_e").GetValue<bool>()) Spells.CastSkillshot("E", TargetSelector.DamageType.Magical);
+            if (Menu.Item("Auto_q").GetValue<bool>()) Spells.CastSkillshot("Q", TargetSelector.DamageType.Magical);
             if (Menu.Item("Auto_w").GetValue<bool>()) CastW();
         }
 
@@ -127,7 +127,7 @@ namespace EasyAhri
         {
             if (!Spells.get("W").IsReady()) return;
 
-            Obj_AI_Hero target = SimpleTs.GetTarget(Spells.get("W").Range, SimpleTs.DamageType.Magical);
+            Obj_AI_Hero target = TargetSelector.GetTarget(Spells.get("W").Range, TargetSelector.DamageType.Magical);
             if (target == null) return;
 
             Spells.get("W").Cast();
