@@ -60,16 +60,17 @@ public abstract class Champion
         OnInitMenu();
 
         BoolLinks.Add("packets", Menu.MainMenu.AddLinkedBool("Use packet cast", true));
-     	
+
      	Game.OnGameUpdate += OnUpdate;
      	Drawing.OnDraw += OnDraw;
         Drawing.OnEndScene += OnEndScene;
         AntiGapcloser.OnEnemyGapcloser += OnEnemyGapcloser;
         Interrupter.OnPossibleToInterrupt += OnPossibleToInterrupt;
+        Spellbook.OnCastSpell += OnCastSpell;
         
         Game.PrintChat("Easy" + Player.ChampionName + " is loaded! Skin Changer does not work!");
 	}
-	
+
 	protected bool IsPacketCastEnabled()
     {
         return BoolLinks["packets"].Value;
@@ -82,8 +83,8 @@ public abstract class Champion
         
         Spells.PacketCast = IsPacketCastEnabled();
         Enemies = ObjectManager.Get<Obj_AI_Hero>().Where(x => x.IsEnemy && x.IsValidTarget()).ToList();
-        
-		OnUpdate();
+
+        OnUpdate();
 		
         if (Player.IsWindingUp || Player.IsDashing()) return;
         
@@ -132,4 +133,5 @@ public abstract class Champion
     protected virtual void OnAuto() { }
 	protected virtual void OnEnemyGapcloser(ActiveGapcloser gapcloser) { }
 	protected virtual void OnPossibleToInterrupt(Obj_AI_Base unit, InterruptableSpell spell) { }
+    protected virtual void OnCastSpell(GameObject sender, SpellbookCastSpellEventArgs args) { }
 }
