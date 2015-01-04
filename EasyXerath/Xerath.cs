@@ -98,7 +98,7 @@ public class Xerath : Champion
             Spells.CastSkillshot(WCenter, TargetSelector.DamageType.Magical);
         if (BoolLinks["harass_e"].Value && GetSpellData(SpellSlot.E).ManaCost + SliderLinks["harass_mana"].Value.Value <= Player.Mana)
             Spells.CastSkillshot(E, TargetSelector.DamageType.Magical);
-        if (Q.IsCharging || (BoolLinks["harass_q"].Value && GetSpellData(SpellSlot.Q).ManaCost + SliderLinks["harass_mana"].Value.Value <= Player.Mana))
+        if (BoolLinks["harass_q"].Value && (Q.IsCharging || GetSpellData(SpellSlot.Q).ManaCost + SliderLinks["harass_mana"].Value.Value <= Player.Mana))
             CastQ();
     }
     
@@ -110,7 +110,7 @@ public class Xerath : Champion
             Spells.CastSkillshot(WCenter, TargetSelector.DamageType.Magical);
         if (BoolLinks["auto_e"].Value && GetSpellData(SpellSlot.E).ManaCost + SliderLinks["auto_mana"].Value.Value <= Player.Mana)
             Spells.CastSkillshot(E, TargetSelector.DamageType.Magical);
-        if (Q.IsCharging || (BoolLinks["auto_q"].Value && GetSpellData(SpellSlot.Q).ManaCost + SliderLinks["auto_mana"].Value.Value <= Player.Mana))
+        if (BoolLinks["auto_q"].Value && (Q.IsCharging || GetSpellData(SpellSlot.Q).ManaCost + SliderLinks["auto_mana"].Value.Value <= Player.Mana))
             CastQ();
     }
     
