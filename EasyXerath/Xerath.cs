@@ -120,6 +120,11 @@ public class Xerath : Champion
     
     protected override void OnUpdate()
     {
+        if (Q.IsCharging)
+            Orbwalking.Attack = false;
+        else
+            Orbwalking.Attack = true;
+
         if (R.Level > 0)
             R.Range = 1750 + R.Level * 1200;
 
@@ -220,7 +225,7 @@ public class Xerath : Champion
             if ((Player.LastCastedSpellName() == "summonerflash" && Player.LastCastedSpellT() > Environment.TickCount - 100) || RTarget.IsDashing())
                 RWaitTime = Environment.TickCount + 500;
 
-            if (Player.LastCastedSpellT() < Environment.TickCount - 700)
+            if (Player.LastCastedSpellT() < Environment.TickCount - 800)
             {
                 if(Player.LastCastedSpellT() < Environment.TickCount - 1750)
                     Spells.CastSkillshot(R, RTarget, HitChance.High);
@@ -273,9 +278,9 @@ public class Xerath : Champion
 
             if ((BlueTrinket1.IsOwned() && BlueTrinket1.IsReady()) || (BlueTrinket2.IsOwned() && BlueTrinket2.IsReady()))
             {
-                if (BlueTrinket1.IsOwned() && BlueTrinket1.IsReady() && BlueTrinket1.Range + 50 >= Player.Distance(RTarget))
+                if (BlueTrinket1.IsOwned() && BlueTrinket1.IsReady() && BlueTrinket1.Range + 100 >= Player.Distance(RTarget))
                     BlueTrinket1.Cast(RTarget.Position);
-                if (BlueTrinket2.IsOwned() && BlueTrinket2.IsReady() && BlueTrinket2.Range + 50 >= Player.Distance(RTarget))
+                if (BlueTrinket2.IsOwned() && BlueTrinket2.IsReady() && BlueTrinket2.Range + 100 >= Player.Distance(RTarget))
                     BlueTrinket2.Cast(RTarget.Position);
 
                 Utility.DelayAction.Add(175, CastRCallback);
