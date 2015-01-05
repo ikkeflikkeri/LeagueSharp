@@ -278,7 +278,7 @@ public class Xerath : Champion
                 if (BlueTrinket2.IsOwned() && BlueTrinket2.IsReady() && BlueTrinket2.Range + 50 >= Player.Distance(RTarget))
                     BlueTrinket2.Cast(RTarget.Position);
 
-                Utility.DelayAction.Add(100, CastRCallback);
+                Utility.DelayAction.Add(175, CastRCallback);
             }
             else
                 args.Process = true;
