@@ -67,6 +67,7 @@ public abstract class Champion
         AntiGapcloser.OnEnemyGapcloser += OnEnemyGapcloser;
         Interrupter.OnPossibleToInterrupt += OnPossibleToInterrupt;
         Spellbook.OnCastSpell += OnCastSpell;
+        Obj_AI_Hero.OnProcessSpellCast += OnProcessSpellCast;
         
         Game.PrintChat("Easy" + Player.ChampionName + " is loaded! Skin Changer does not work!");
 	}
@@ -134,4 +135,5 @@ public abstract class Champion
 	protected virtual void OnEnemyGapcloser(ActiveGapcloser gapcloser) { }
 	protected virtual void OnPossibleToInterrupt(Obj_AI_Base unit, InterruptableSpell spell) { }
     protected virtual void OnCastSpell(GameObject sender, SpellbookCastSpellEventArgs args) { }
+    protected virtual void OnProcessSpellCast(Obj_AI_Base sender, GameObjectProcessSpellCastEventArgs args) { }
 }

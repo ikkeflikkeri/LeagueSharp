@@ -7,6 +7,8 @@ using System.Linq;
 public class Xerath : Champion
 {
     private Spell WCenter;
+    private Items.Item BlueTrinket1;
+    private Items.Item BlueTrinket2;
     
     private Obj_AI_Hero RTarget = null;
     private int RTime = 0;
@@ -14,8 +16,9 @@ public class Xerath : Champion
     
     public Xerath() : base("Xerath")
 	{
-        
-	}
+        BlueTrinket1 = ItemData.Scrying_Orb_Trinket.GetItem();
+        BlueTrinket2 = ItemData.Farsight_Orb_Trinket.GetItem();
+    }
     
     protected override void OnInitSkins()
     {
@@ -76,6 +79,7 @@ public class Xerath : Champion
         KeyLinks.Add("misc_e", miscMenu.AddLinkedKeyBind("Use E key", 'T', KeyBindType.Press));
         BoolLinks.Add("misc_w", miscMenu.AddLinkedBool("Use W centered", true));
         BoolLinks.Add("misc_r", miscMenu.AddLinkedBool("Use R charges when ulting", true));
+        BoolLinks.Add("misc_r_blue", miscMenu.AddLinkedBool("Use Blue Trinket when ulting", true));
     }
     
     protected override void OnCombo()
@@ -136,11 +140,7 @@ public class Xerath : Champion
         if (BoolLinks["misc_r"].Value && IsChargingUltimate())
             CastR();
         else
-        {
-            RTarget = null;
-            RTime = 0;
-            RWaitTime = 0;
-        }
+            ResetR();
     }
     
     protected override void OnDraw()
@@ -170,8 +170,6 @@ public class Xerath : Champion
 
     private void CastQ()
     {
-        if (!Q.IsReady()) return;
-
         Obj_AI_Hero target = TargetSelector.GetTarget(Q.ChargedMaxRange, TargetSelector.DamageType.Magical);
         if (target == null || !target.IsValidTarget(Q.ChargedMaxRange))
             return;
@@ -222,7 +220,7 @@ public class Xerath : Champion
             if ((Player.LastCastedSpellName() == "summonerflash" && Player.LastCastedSpellT() > Environment.TickCount - 100) || RTarget.IsDashing())
                 RWaitTime = Environment.TickCount + 500;
 
-            if (Player.LastCastedSpellT() < Environment.TickCount - 800)
+            if (Player.LastCastedSpellT() < Environment.TickCount - 700)
             {
                 if(Player.LastCastedSpellT() < Environment.TickCount - 1750)
                     Spells.CastSkillshot(R, RTarget, HitChance.High);
@@ -254,5 +252,41 @@ public class Xerath : Champion
         if (R.Level > 0)
             return (float)Player.GetSpellDamage(hero, SpellSlot.R) * 3f;
         return 0f;
+    }
+    
+    private void ResetR()
+    {
+        RTarget = null;
+        RTime = 0;
+        RWaitTime = 0;
+    }
+
+    protected override void OnCastSpell(GameObject sender, SpellbookCastSpellEventArgs args)
+    {
+        if (sender.IsMe && args.Slot == SpellSlot.R && BoolLinks["misc_r_blue"].Value)
+        {
+            Obj_AI_Hero target = TargetSelector.GetTarget(R.Range, TargetSelector.DamageType.Magical);
+            if (target == null || !target.IsValidTarget(R.Range)) return;
+
+            if (RTarget == null)
+                RTarget = target;
+
+            if ((BlueTrinket1.IsOwned() && BlueTrinket1.IsReady()) || (BlueTrinket2.IsOwned() && BlueTrinket2.IsReady()))
+            {
+                if (BlueTrinket1.IsOwned() && BlueTrinket1.IsReady() && BlueTrinket1.Range + 50 >= Player.Distance(RTarget))
+                    BlueTrinket1.Cast(RTarget.Position);
+                if (BlueTrinket2.IsOwned() && BlueTrinket2.IsReady() && BlueTrinket2.Range + 50 >= Player.Distance(RTarget))
+                    BlueTrinket2.Cast(RTarget.Position);
+
+                Utility.DelayAction.Add(100, CastRCallback);
+            }
+            else
+                args.Process = true;
+        }
+    }
+
+    private void CastRCallback()
+    {
+        Spells.Cast(R);
     }
 }

@@ -25,6 +25,17 @@ public static class Spells
             spell.Cast(target, PacketCast, aoe);
 	}
 	
+	public static void CastTargeted(Spell spell, TargetSelector.DamageType damageType)
+	{
+	    if (!spell.IsReady()) return;
+
+        Obj_AI_Hero target = TargetSelector.GetTarget(spell.Range, damageType);
+        if (target == null) return;
+
+        if (target.IsValidTarget(spell.Range))
+            spell.CastOnUnit(target, PacketCast);
+	}
+	
 	public static void CastSelf(Spell spell, TargetSelector.DamageType damageType)
 	{
 		if (!spell.IsReady()) return;
