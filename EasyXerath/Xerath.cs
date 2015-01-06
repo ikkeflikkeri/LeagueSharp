@@ -279,11 +279,15 @@ public class Xerath : Champion
             if ((BlueTrinket1.IsOwned() && BlueTrinket1.IsReady()) || (BlueTrinket2.IsOwned() && BlueTrinket2.IsReady()))
             {
                 if (BlueTrinket1.IsOwned() && BlueTrinket1.IsReady() && BlueTrinket1.Range + 100 >= Player.Distance(RTarget))
+                {
                     BlueTrinket1.Cast(RTarget.Position);
+                    Utility.DelayAction.Add(175, CastRCallback);
+                }
                 if (BlueTrinket2.IsOwned() && BlueTrinket2.IsReady() && BlueTrinket2.Range + 100 >= Player.Distance(RTarget))
+                {
                     BlueTrinket2.Cast(RTarget.Position);
-
-                Utility.DelayAction.Add(175, CastRCallback);
+                    Utility.DelayAction.Add(175, CastRCallback);
+                }
             }
             else
                 args.Process = true;
