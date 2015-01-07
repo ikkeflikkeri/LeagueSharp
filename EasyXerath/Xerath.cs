@@ -79,6 +79,9 @@ public class Xerath : Champion
         KeyLinks.Add("misc_e", miscMenu.AddLinkedKeyBind("Use E key", 'T', KeyBindType.Press));
         BoolLinks.Add("misc_w", miscMenu.AddLinkedBool("Use W centered", true));
         BoolLinks.Add("misc_r", miscMenu.AddLinkedBool("Use R charges when ulting", true));
+        SliderLinks.Add("misc_r_min_delay", miscMenu.AddLinkedSlider("R min delay between charges", 800, 0, 1500));
+        SliderLinks.Add("misc_r_max_delay", miscMenu.AddLinkedSlider("R max delay between charges", 1750, 1500, 3000));
+        SliderLinks.Add("misc_r_dash", miscMenu.AddLinkedSlider("R delay after flash/dash", 500, 0, 2000));
         BoolLinks.Add("misc_r_blue", miscMenu.AddLinkedBool("Use Blue Trinket when ulting", true));
     }
     
@@ -187,7 +190,7 @@ public class Xerath : Champion
                 Q.Cast(target, IsPacketCastEnabled());
             else
             {
-                float distance = Player.Distance(target) + 75;
+                float distance = Player.Distance(target) + target.BoundingRadius * 2;
 
                 if (distance > Q.ChargedMaxRange)
                     distance = Q.ChargedMaxRange;
@@ -223,11 +226,11 @@ public class Xerath : Champion
         if(Environment.TickCount >= RWaitTime)
         {
             if ((Player.LastCastedSpellName() == "summonerflash" && Player.LastCastedSpellT() > Environment.TickCount - 100) || RTarget.IsDashing())
-                RWaitTime = Environment.TickCount + 500;
+                RWaitTime = Environment.TickCount + SliderLinks["misc_r_dash"].Value.Value;
 
-            if (Player.LastCastedSpellT() < Environment.TickCount - 800)
+            if (Player.LastCastedSpellT() < Environment.TickCount - SliderLinks["misc_r_min_delay"].Value.Value)
             {
-                if(Player.LastCastedSpellT() < Environment.TickCount - 1750)
+                if (Player.LastCastedSpellT() < Environment.TickCount - SliderLinks["misc_r_max_delay"].Value.Value)
                     Spells.CastSkillshot(R, RTarget, HitChance.High);
                 else
                     Spells.CastSkillshot(R, RTarget);
@@ -278,7 +281,7 @@ public class Xerath : Champion
 
             if ((BlueTrinket1.IsOwned() && BlueTrinket1.IsReady()) || (BlueTrinket2.IsOwned() && BlueTrinket2.IsReady()))
             {
-                if (BlueTrinket1.IsOwned() && BlueTrinket1.IsReady() && BlueTrinket1.Range >= Player.Distance(RTarget))
+                if (BlueTrinket1.IsOwned() && BlueTrinket1.IsReady() && (Player.Level >= 9 ? 3500f : BlueTrinket1.Range) >= Player.Distance(RTarget))
                 {
                     BlueTrinket1.Cast(RTarget.Position);
                     Utility.DelayAction.Add(175, CastRCallback);
