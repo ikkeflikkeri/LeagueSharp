@@ -40,7 +40,7 @@ public class Xerath : Champion
         Q.SetCharged("XerathArcanopulseChargeUp", "XerathArcanopulseChargeUp", 750, 1550, 1.5f);
         W.SetSkillshot(0.7f, 200f, float.MaxValue, false, SkillshotType.SkillshotCircle);
         WCenter.SetSkillshot(0.7f, 50f, float.MaxValue, false, SkillshotType.SkillshotCircle);
-        E.SetSkillshot(0.2f, 60, 1400f, true, SkillshotType.SkillshotLine);
+        E.SetSkillshot(0.25f, 60, 1400f, true, SkillshotType.SkillshotLine);
         R.SetSkillshot(0.7f, 120f, float.MaxValue, false, SkillshotType.SkillshotCircle);
     }
     
