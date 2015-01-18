@@ -40,7 +40,7 @@ public class Xerath : Champion
         Q.SetCharged("XerathArcanopulseChargeUp", "XerathArcanopulseChargeUp", 750, 1550, 1.5f);
         W.SetSkillshot(0.7f, 200f, float.MaxValue, false, SkillshotType.SkillshotCircle);
         WCenter.SetSkillshot(0.7f, 50f, float.MaxValue, false, SkillshotType.SkillshotCircle);
-        E.SetSkillshot(0.25f, 60, 1400f, true, SkillshotType.SkillshotLine);
+        E.SetSkillshot(0.2f, 60, 1400f, true, SkillshotType.SkillshotLine);
         R.SetSkillshot(0.7f, 120f, float.MaxValue, false, SkillshotType.SkillshotCircle);
     }
     
@@ -269,9 +269,9 @@ public class Xerath : Champion
         RWaitTime = 0;
     }
 
-    protected override void OnCastSpell(GameObject sender, SpellbookCastSpellEventArgs args)
+    protected override void OnCastSpell(Spellbook sender, SpellbookCastSpellEventArgs args)
     {
-        if (sender.IsMe && args.Slot == SpellSlot.R && BoolLinks["misc_r_blue"].Value)
+        if (sender.Owner.IsMe && args.Slot == SpellSlot.R && BoolLinks["misc_r_blue"].Value)
         {
             Obj_AI_Hero target = TargetSelector.GetTarget(R.Range, TargetSelector.DamageType.Magical);
             if (target == null || !target.IsValidTarget(R.Range)) return;

@@ -134,6 +134,6 @@ public abstract class Champion
     protected virtual void OnAuto() { }
 	protected virtual void OnEnemyGapcloser(ActiveGapcloser gapcloser) { }
 	protected virtual void OnPossibleToInterrupt(Obj_AI_Base unit, InterruptableSpell spell) { }
-    protected virtual void OnCastSpell(GameObject sender, SpellbookCastSpellEventArgs args) { }
+    protected virtual void OnCastSpell(Spellbook sender, SpellbookCastSpellEventArgs args) { }
     protected virtual void OnProcessSpellCast(Obj_AI_Base sender, GameObjectProcessSpellCastEventArgs args) { }
 }
