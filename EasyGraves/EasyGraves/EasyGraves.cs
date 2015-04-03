@@ -42,7 +42,7 @@ namespace EasyJinx
 
             Spell E = new Spell(SpellSlot.E, 425f);
 
-            Spell R = new Spell(SpellSlot.R, 1100f);
+            Spell R = new Spell(SpellSlot.R, 1900);
             R.SetSkillshot(0.25f, 100f, 2100f, true, SkillshotType.SkillshotLine);
 
             Spells.Add("Q", Q);

@@ -54,7 +54,7 @@ abstract class Champion
         Menu.AddItem(new MenuItem("Recall_block", "Block spells while recalling").SetValue(true));
         Menu.AddToMainMenu();
 
-        Game.OnGameUpdate += Game_OnGameUpdate;
+        Game.OnUpdate += Game_OnGameUpdate;
         Drawing.OnDraw += Drawing_OnDraw;
 
         Game.PrintChat("Easy" + ChampName + " is loaded!");

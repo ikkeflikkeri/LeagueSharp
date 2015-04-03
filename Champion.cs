@@ -35,7 +35,7 @@ public abstract class Champion
 	~Champion()
 	{
 		CustomEvents.Game.OnGameLoad -= OnGameLoad;
-		Game.OnGameUpdate -= OnUpdate;
+		Game.OnUpdate -= OnUpdate;
      	Drawing.OnDraw -= OnDraw;
         Drawing.OnEndScene -= OnEndScene;
         AntiGapcloser.OnEnemyGapcloser -= OnEnemyGapcloser;
@@ -61,7 +61,7 @@ public abstract class Champion
 
         BoolLinks.Add("packets", Menu.MainMenu.AddLinkedBool("Use packet cast", true));
 
-     	Game.OnGameUpdate += OnUpdate;
+        Game.OnUpdate += OnUpdate;
      	Drawing.OnDraw += OnDraw;
         Drawing.OnEndScene += OnEndScene;
         AntiGapcloser.OnEnemyGapcloser += OnEnemyGapcloser;
