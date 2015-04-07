@@ -147,7 +147,10 @@ public class Xerath : Champion
         }
 
         if (BoolLinks["misc_r"].Value && IsChargingUltimate())
+        {
             CastR();
+            Game.PrintChat("Ulting");
+        }
         else
             ResetR();
     }
@@ -212,9 +215,9 @@ public class Xerath : Champion
         else if(RTarget.NetworkId != target.NetworkId)
         {
             if (RTime == 0)
-                RTime = Environment.TickCount;
+                RTime = Utils.TickCount;
 
-            int time = Environment.TickCount - RTime;
+            int time = Utils.TickCount - RTime;
             float distance = RTarget.Distance(target);
 
             if(time > distance / 2.5)
@@ -224,14 +227,15 @@ public class Xerath : Champion
             }
         }
 
-        if(Environment.TickCount >= RWaitTime)
+        if(Utils.TickCount >= RWaitTime)
         {
-            if ((Player.LastCastedSpellName() == "summonerflash" && Player.LastCastedSpellT() > Environment.TickCount - 100) || RTarget.IsDashing())
-                RWaitTime = Environment.TickCount + SliderLinks["misc_r_dash"].Value.Value;
+            Console.WriteLine("Aiming");
+            if ((Player.LastCastedSpellName() == "summonerflash" && Player.LastCastedSpellT() > Utils.TickCount - 100) || RTarget.IsDashing())
+                RWaitTime = Utils.TickCount + SliderLinks["misc_r_dash"].Value.Value;
 
-            if (Player.LastCastedSpellT() < Environment.TickCount - SliderLinks["misc_r_min_delay"].Value.Value)
+            if (Player.LastCastedSpellT() < Utils.TickCount - SliderLinks["misc_r_min_delay"].Value.Value)
             {
-                if (Player.LastCastedSpellT() < Environment.TickCount - SliderLinks["misc_r_max_delay"].Value.Value)
+                if (Player.LastCastedSpellT() < Utils.TickCount - SliderLinks["misc_r_max_delay"].Value.Value)
                     Spells.CastSkillshot(R, RTarget, HitChance.High);
                 else
                     Spells.CastSkillshot(R, RTarget);
@@ -253,7 +257,7 @@ public class Xerath : Champion
 
     private bool IsChargingUltimate()
     {
-        return Player.HasBuff("XerathLocusOfPower2", true) || Player.LastCastedSpellName() == "XerathLocusOfPower2";
+        return ObjectManager.Player.HasBuff("XerathLocusOfPower2", true) || (ObjectManager.Player.LastCastedSpellName() == "XerathLocusOfPower2" && Utils.TickCount - ObjectManager.Player.LastCastedSpellT() < 500);
     }
 
     private float DamageCalculation(Obj_AI_Base hero)
