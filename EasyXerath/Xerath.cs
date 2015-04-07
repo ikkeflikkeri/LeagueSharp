@@ -147,10 +147,7 @@ public class Xerath : Champion
         }
 
         if (BoolLinks["misc_r"].Value && IsChargingUltimate())
-        {
             CastR();
-            Game.PrintChat("Ulting");
-        }
         else
             ResetR();
     }
