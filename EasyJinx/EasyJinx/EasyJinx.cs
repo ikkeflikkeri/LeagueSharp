@@ -65,7 +65,7 @@ namespace EasyJinx
             Menu.SubMenu("Auto").AddItem(new MenuItem("Auto_egap", "Use E on gapcloser").SetValue(true));
             Menu.SubMenu("Auto").AddItem(new MenuItem("Auto_r", "Use R").SetValue(true));
             Menu.SubMenu("Auto").AddItem(new MenuItem("Auto_minrange", "Min R range").SetValue(new Slider(1050, 0, 1500)));
-            Menu.SubMenu("Auto").AddItem(new MenuItem("Auto_maxrange", "Max R range").SetValue(new Slider(3000, 1500, 5000)));
+            Menu.SubMenu("Auto").AddItem(new MenuItem("Auto_maxrange", "Max R range").SetValue(new Slider(3000, 1200, 5000)));
 
             Menu.AddSubMenu(new Menu("Drawing", "Drawing"));
             Menu.SubMenu("Drawing").AddItem(new MenuItem("Drawing_q", "Q Range").SetValue(new Circle(true, System.Drawing.Color.FromArgb(100, 0, 255, 0))));
