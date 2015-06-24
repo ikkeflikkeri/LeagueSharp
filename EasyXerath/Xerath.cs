@@ -17,8 +17,8 @@ public class Xerath : Champion
     
     public Xerath() : base("Xerath")
 	{
-        BlueTrinket1 = ItemData.Scrying_Orb_Trinket.GetItem();
-        BlueTrinket2 = ItemData.Farsight_Orb_Trinket.GetItem();
+        BlueTrinket1 = LeagueSharp.Common.Data.ItemData.Scrying_Orb_Trinket.GetItem();
+        BlueTrinket2 = LeagueSharp.Common.Data.ItemData.Farsight_Orb_Trinket.GetItem();
     }
     
     protected override void OnInitSkins()
