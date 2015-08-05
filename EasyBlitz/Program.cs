@@ -30,7 +30,7 @@ namespace EasyBlitz
                 return;
 
             // Set spells      
-            _q = new Spell(SpellSlot.Q, 1000f);
+            _q = new Spell(SpellSlot.Q, 950f);
             _q.SetSkillshot(0.25f, 70f, 1800f, true, SkillshotType.SkillshotLine);
 
             _e = new Spell(SpellSlot.E, 150f);
