@@ -11,12 +11,6 @@ using Color = System.Drawing.Color;
 
 namespace EasyBlitz
 {
-    //  _____ _ _ _                       _   
-    // | __  | |_| |_ ___ ___ ___ ___ ___| |_ 
-    // | __ -| | |  _|- _|  _|  _| .'|   | '_|
-    // |_____|_|_|_| |___|___|_| |__,|_|_|_,_|
-    //  Copyright © Kurisu Solutions 2015
-
     internal class Program
     {
         private static Menu _menu;
