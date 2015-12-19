@@ -195,7 +195,7 @@ namespace EasyBlitz
         {
             if (_q.IsReady())
             {
-                ObjectManager.Get<Obj_AI_Hero>()
+                ObjectManager.Get<Obj_AI_Hero>().ToList()
                     .FindAll(
                         h => h.IsValidTarget(_q.Range) && h.Distance(Me.ServerPosition) > _e.Range + 200 &&
                             _menu.Item("dograb" + h.ChampionName).GetValue<StringList>().SelectedIndex == 2)
